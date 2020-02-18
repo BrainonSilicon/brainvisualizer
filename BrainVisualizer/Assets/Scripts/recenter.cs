@@ -10,5 +10,6 @@ public class recenter : MonoBehaviour
     public void changePosition()
     {
         transform.position = baseObject.transform.position + baseObject.transform.forward * distance;
+        transform.rotation = baseObject.transform.rotation;
     }
 }

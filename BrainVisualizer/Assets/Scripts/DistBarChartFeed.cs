@@ -8,7 +8,7 @@ public class DistBarChartFeed : MonoBehaviour {
         BarChart barChart = GetComponent<BarChart>();
         if (barChart != null)
         {
-            barChart.DataSource.SetValue("Distractions", "4pm", Random.value * 10);
+            barChart.DataSource.SlideValue("Distractions", "4pm", Random.value * 30, 20f);
         }
     }
     private void Update()

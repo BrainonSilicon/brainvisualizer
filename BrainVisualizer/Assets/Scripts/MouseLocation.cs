@@ -1,38 +1,65 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Runtime.InteropServices;
 
 public class MouseLocation : MonoBehaviour
 {
     public UnityEngine.UI.Text text;
 
+    private MouseSensor ms;
     private double oldx;
     private double oldy;
 
-    // Update is called once per frame
-    void FixedUpdate()
+    private KbdSensor ks;
+
+    private void Start()
     {
-        var pos = Input.mousePosition;
+        ms = new MouseSensor();
+        ks = new KbdSensor();
+    }
 
-        text.text = "dx " + (pos.x - oldx).ToString() + "\ndy- " + (pos.y - oldy).ToString() ;
-        oldx = pos.x;
-        oldy = pos.y;
+    // Update is called once per frame
+    void Update()
+    {
+        ms.updateMousePosition();
+        var x = ms.x;
+        var y = ms.y;
+
+        text.text = "dx " + (x - oldx).ToString() + "\ndy- " + (y - oldy).ToString();
+        oldx = x;
+        oldy = y;
 
 
-        //if (Event.current.type == EventType.KeyDown)
-        //{
-        //    text.text += "\n press";
-        //}
+        text.text += "\nkbd press - " + ks.getNumOfKeyPress().ToString();
+        // ks.resetKeyPresses();
 
-        var kbdClick = Input.anyKey;
-        if (kbdClick)
-        {
-            text.text += "\nkey down";
-        }
-        else
-        {
-            text.text += "\nno click";           
-        }
+        text.text += "\nName = " + GetActiveFileNameTitle();
+
 
     }
+
+    public void OnDestroy()
+    {
+        ks.Dispose();
+    }
+
+    [DllImport("user32.dll")]
+    public static extern IntPtr GetForegroundWindow();
+
+    [DllImport("user32.dll")]
+    public static extern IntPtr GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
+
+    public String GetActiveFileNameTitle()
+    {
+        IntPtr hWnd = GetForegroundWindow();
+        uint processId;
+        GetWindowThreadProcessId(hWnd, out processId);
+        System.Diagnostics.Process p = System.Diagnostics.Process.GetProcessById((int)processId);
+        //p.MainModule.FileName.Dump();
+        return p.ProcessName;
+    }
+
 }
+

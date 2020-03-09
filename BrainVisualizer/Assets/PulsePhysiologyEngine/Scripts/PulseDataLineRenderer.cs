@@ -95,7 +95,7 @@ public class PulseDataLineRenderer: PulseDataConsumer
         lineRenderer.receiveShadows = false;
         lineRenderer.allowOcclusionWhenDynamic = false;
         lineRenderer.useWorldSpace = false; // use canvas relative space
-        lineRenderer.alignment = LineAlignment.TransformZ; // orthogonal to canvas
+ //       lineRenderer.alignment = LineAlignment.TransformZ; // orthogonal to canvas
         lineRenderer.sortingOrder = 1;  // in front of image canvas (?)
         lineRenderer.positionCount = 0; // no points
     }

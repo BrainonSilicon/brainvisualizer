@@ -1,9 +1,9 @@
-﻿using System;
+﻿#if UNITY_STANDALONE_WIN
+
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using UnityEngine;
-
 
 class GlobalKeyboardHookEventArgs : HandledEventArgs
 {
@@ -18,7 +18,6 @@ class GlobalKeyboardHookEventArgs : HandledEventArgs
         KeyboardState = keyboardState;
     }
 }
-
 //Based on https://gist.github.com/Stasonix
 class GlobalKeyboardHook : IDisposable
 {
@@ -204,65 +203,4 @@ class GlobalKeyboardHook : IDisposable
     }
 }
 
-public class KbdSensor : IAttentionSensor, IDisposable
-{
-    private int _keyPressed;
-
-    private GlobalKeyboardHook _globalKeyboardHook;
-
-    public KbdSensor()
-    {
-        _globalKeyboardHook = new GlobalKeyboardHook();
-        _globalKeyboardHook.KeyboardPressed += OnKeyPressed;
-       
-    }
-
-    private void OnKeyPressed(object sender, GlobalKeyboardHookEventArgs e)
-    {
-        //    UnityEngine.Debug.Log(e.KeyboardData.VirtualCode);
-        if (e.KeyboardState == GlobalKeyboardHook.KeyboardState.KeyDown)
-        {
-            _keyPressed++;
-        }
-    }
-
-    public int getNumOfKeyPress()
-    {
-        return _keyPressed;     
-    }
-
-    public void resetKeyPresses()
-    {
-        _keyPressed = 0;
-    }
-
-    public double getAttention()
-    {
-        return 0.5;
-    }
-
-    public double getLikelihood()
-    {
-        return 0.5;
-    }
-
-    public void getAttentionAndLikelihood(ref double attention, ref double likelihood)
-
-    //  public void getAttentionAndLikelihood(ref double attention, ref double likelihood)
-    {
-        attention = getAttention();
-        likelihood = getLikelihood();
-    }
-
-    public bool isActive()
-    {
-        return true;
-    }
-
-    public void Dispose()
-    {
-        _globalKeyboardHook.KeyboardPressed -= OnKeyPressed;
-        _globalKeyboardHook?.Dispose();
-    }
-
-}
+#endif

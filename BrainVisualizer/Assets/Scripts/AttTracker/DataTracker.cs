@@ -1,12 +1,19 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using System.Runtime.InteropServices;
+
 
 public class DataTracker : MonoBehaviour
 {
     public UnityEngine.UI.Text text;
+    public UnityEngine.UI.Text textForThread;
+    public int threadSleepTimeInMS;
+    private int threadCounter;
+    private Thread thr;
+    private bool threadShouldRun;
 
     private MouseSensor ms;
     private double oldx;
@@ -14,10 +21,24 @@ public class DataTracker : MonoBehaviour
 
     private KbdSensor ks;
 
+    public void ExampleThreadFunction()
+    {
+        while (threadShouldRun)
+        {
+            threadCounter++;
+            Thread.Sleep(threadSleepTimeInMS); 
+        }
+    }
+
     private void Start()
     {
         ms = new MouseSensor();
         ks = new KbdSensor();
+
+        threadCounter = 0;
+        threadShouldRun = true;
+        thr = new Thread(ExampleThreadFunction);
+        thr.Start();
     }
 
     // Update is called once per frame
@@ -43,11 +64,15 @@ public class DataTracker : MonoBehaviour
         var kbdLikelihood = ks.getLikelihood();
         text.text += "\nAttention = " +
             ((mouseAttention * mouseLikelihood + kbdAttention * kbdLikelihood) / (mouseLikelihood + kbdLikelihood)).ToString();
+
+
+        textForThread.text = threadCounter.ToString();
     }
 
     public void OnDestroy()
     {
         ks.Dispose();
+        threadShouldRun = false;
     }
 
   

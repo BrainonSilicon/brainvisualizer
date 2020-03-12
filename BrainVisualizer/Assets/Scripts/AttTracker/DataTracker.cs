@@ -23,6 +23,7 @@ public class DataTracker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //everytime you move the mouse, this updates to the 'relative' new position from old 
         ms.updateMousePosition();
         var x = ms.x;
         var y = ms.y;

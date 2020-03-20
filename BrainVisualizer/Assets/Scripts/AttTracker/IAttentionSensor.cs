@@ -5,9 +5,9 @@ interface IAttentionSensor
 {
 
 
-    double getAttention();
-    double getLikelihood();
-    void getAttentionAndLikelihood(ref double attention, ref double likelihood);
+    double Attention();
+    double Likelihood();
+    void AttentionAndLikelihood(ref double attention, ref double likelihood);
 
-    bool isActive();
+    bool IsActive();
 }

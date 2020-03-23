@@ -107,7 +107,7 @@ public class MouseSensor : IAttentionSensor
         var dy = mouseDataPoints[mouseDataPoints.Count - i - 1].y - mouseDataPoints[mouseDataPoints.Count - i - 2].y;
         var dt = mouseDataPoints[mouseDataPoints.Count - i - 1].t - mouseDataPoints[mouseDataPoints.Count - i - 2].t;
 
-        return (dx * dx + dy * dy) / dt.TotalMilliseconds;
+        return Mathf.Sqrt((float)((dx * dx + dy * dy))) / dt.TotalMilliseconds;
     }
 
     public double Acceleration()

@@ -24,35 +24,35 @@ public class KbdSensor : IAttentionSensor, IDisposable
     }
 #endif
 
-    public int getNumOfKeyPress()
+    public int NumOfKeyPress()
     {
         return _keyPressed;
     }
 
-    public void resetKeyPresses()
+    public void ResetKeyPresses()
     {
         _keyPressed = 0;
     }
 
-    public double getAttention()
+    public double Attention()
     {
         return 0.5;
     }
 
-    public double getLikelihood()
+    public double Likelihood()
     {
         return 0.5;
     }
 
-    public void getAttentionAndLikelihood(ref double attention, ref double likelihood)
+    public void AttentionAndLikelihood(ref double attention, ref double likelihood)
 
     //  public void getAttentionAndLikelihood(ref double attention, ref double likelihood)
     {
-        attention = getAttention();
-        likelihood = getLikelihood();
+        attention = Attention();
+        likelihood = Likelihood();
     }
 
-    public bool isActive()
+    public bool IsActive()
     {
         return true;
     }

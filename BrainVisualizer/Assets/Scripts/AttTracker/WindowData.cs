@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
+
+
 public class WindowData
 {
 #if UNITY_STANDALONE_WIN
@@ -27,6 +29,13 @@ public class WindowData
             return "Unknown";
         }
 #else
+    // [Foundation.Register("NSWorkspace", true)]
+    //public class NSWorkspace : Foundation.NSObject
+
+
+    //    var foreground_app = NSWorkspace.SharedWorkspace.FrontmostApplication;
+    //    Console.WriteLine($"Name: {foreground_app.LocalizedName}");
+    //    Console.WriteLine($"Pid: {foreground_app.ProcessIdentifier}");
         return "Not implemented";
 #endif
     }

@@ -16,56 +16,73 @@ public class DataTracker : MonoBehaviour
     private bool threadShouldRun;
 
     private MouseSensor ms;
-    private double oldx;
-    private double oldy;
+    private double area;
 
     private KbdSensor ks;
 
-    public void ExampleThreadFunction()
-    {
-        while (threadShouldRun)
-        {
-            threadCounter++;
-            Thread.Sleep(threadSleepTimeInMS); 
-        }
-    }
+    //public void ExampleThreadFunction()
+    //{
+    //    while (threadShouldRun)
+    //    {
+    //        threadCounter++;
+    //        Thread.Sleep(threadSleepTimeInMS);
+    //    }
+    //}
 
     private void Start()
     {
         ms = new MouseSensor();
         ks = new KbdSensor();
+      
+        area = 0;
 
-        threadCounter = 0;
-        threadShouldRun = true;
-        thr = new Thread(ExampleThreadFunction);
-        thr.Start();
+        //threadCounter = 0;
+        //threadShouldRun = true;
+        //thr = new Thread(ExampleThreadFunction);
+        //thr.Start();
     }
 
     // Update is called once per frame
     void Update()
     {
+<<<<<<< HEAD
         //everytime you move the mouse, this updates to the 'relative' new position from old 
         ms.updateMousePosition();
         var x = ms.x;
         var y = ms.y;
+=======
+        DisplayDataOnScreen();
+        UpdateData();
+>>>>>>> 33276cc16e7795e787d7d43f4c65679076aea8e7
 
-        text.text = "dx " + (x - oldx).ToString() + "\ndy- " + (y - oldy).ToString();
-        oldx = x;
-        oldy = y;
+    }
 
+    private void UpdateData()
+    {
+        var prevMouseMoving = ms.isMoving;
+        ms.UpdateMouse();
 
-        text.text += "\nkbd press - " + ks.getNumOfKeyPress().ToString();
+        if (prevMouseMoving && !ms.isMoving)
+        {
+            area = ms.Area();
+            ms.ClearDataPoints();
+        }
+
+    
+
         // ks.resetKeyPresses();
+    }
 
+    private void DisplayDataOnScreen()
+    {
+        text.text = "x- " + ms.x.ToString() + "\ny- " + ms.y.ToString();
+        text.text += "\nmoving- " + ms.isMoving.ToString();
+        text.text += "\narea- " + area.ToString("N3");
+        text.text += "\nvelocity- " + (10 * ms.Velocity()).ToString("N3") + "\naccel- " + (10 * ms.Acceleration()).ToString("N3");
+        text.text += "\nkbd press - " + ks.NumOfKeyPress().ToString();
         text.text += "\nName = " + WindowData.GetActiveFileNameTitle();
-
-        var mouseAttention = ms.getAttention();
-        var mouseLikelihood = ms.getLikelihood();
-        var kbdAttention = ks.getAttention();
-        var kbdLikelihood = ks.getLikelihood();
         text.text += "\nAttention = " +
-            ((mouseAttention * mouseLikelihood + kbdAttention * kbdLikelihood) / (mouseLikelihood + kbdLikelihood)).ToString();
-
+         ((ms.Attention() * ms.Likelihood() + ks.Attention() * ks.Likelihood()) / (ms.Likelihood() + ks.Likelihood())).ToString();
 
         textForThread.text = threadCounter.ToString();
     }
@@ -73,9 +90,9 @@ public class DataTracker : MonoBehaviour
     public void OnDestroy()
     {
         ks.Dispose();
-        threadShouldRun = false;
+     //   threadShouldRun = false;
     }
 
-  
+
 }
 

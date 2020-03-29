@@ -11,6 +11,7 @@ public class DataTracker : MonoBehaviour
     public UnityEngine.UI.Text text;
     public UnityEngine.UI.Text textForThread;
     public int threadSleepTimeInMS;
+    public int clearKeypressTime;
     private int threadCounter;
     private Thread thr;
     private bool threadShouldRun;
@@ -63,9 +64,7 @@ public class DataTracker : MonoBehaviour
             ms.ClearDataPoints();
         }
 
-        ks.ClearKeyPresses(10);
-
-        // ks.resetKeyPresses();
+        ks.ClearKeyPresses(clearKeypressTime);
     }
 
     private void DisplayDataOnScreen()

@@ -1,8 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 
 public class KbdSensor : IAttentionSensor, IDisposable
 {
-    private int _keyPressed;
+    private struct KeyData
+    {
+        public System.DateTime t;
+    }
+
+    private List<KeyData> KeyDataPoints = new List<KeyData>();
+
 #if UNITY_STANDALONE_WIN
     private GlobalKeyboardHook _globalKeyboardHook;
 #endif
@@ -19,19 +26,33 @@ public class KbdSensor : IAttentionSensor, IDisposable
     {
         if (e.KeyboardState == GlobalKeyboardHook.KeyboardState.KeyDown)
         {
-            _keyPressed++;
+            KeyData data = new KeyData();
+            data.t = System.DateTime.Now;
+            KeyDataPoints.Add(data);
         }
     }
 #endif
 
     public int NumOfKeyPress()
     {
-        return _keyPressed;
+        return KeyDataPoints.Count;
     }
 
-    public void ResetKeyPresses()
+    public void ClearAllKeyPresses()
     {
-        _keyPressed = 0;
+        KeyDataPoints.Clear();
+    }
+    
+    public void ClearKeyPresses(int t)
+    {
+        var currentTime = System.DateTime.Now;
+        foreach (KeyData key in KeyDataPoints)
+        {
+            if ((currentTime - key.t).TotalSeconds > t)
+            {
+                KeyDataPoints.Remove(key);
+            }
+        }
     }
 
     public double Attention()

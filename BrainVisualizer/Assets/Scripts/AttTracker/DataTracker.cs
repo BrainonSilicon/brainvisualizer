@@ -32,6 +32,7 @@ public class DataTracker : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log("Started");
         ms = new MouseSensor();
         ks = new KbdSensor();
 
@@ -62,7 +63,7 @@ public class DataTracker : MonoBehaviour
             ms.ClearDataPoints();
         }
 
-
+        ks.ClearKeyPresses(10);
 
         // ks.resetKeyPresses();
     }

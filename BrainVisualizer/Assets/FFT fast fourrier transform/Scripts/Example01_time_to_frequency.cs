@@ -96,7 +96,7 @@ public class Example01_time_to_frequency : MonoBehaviour
                 text.text += "Key Press\n";
             }
 
-            ms.UpdateMouse();
+            ms.UpdateMouse(Input.mousePosition.x, Input.mousePosition.y);
             var dx = ms.x - oldx;
             var dy = ms.y - oldy;
             text.text += "dx: " + dx.ToString() + "\ndy- " + dy.ToString();

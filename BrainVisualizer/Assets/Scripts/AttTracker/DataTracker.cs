@@ -17,6 +17,7 @@ public class DataTracker : MonoBehaviour
 
     private MouseSensor ms;
     private double area;
+    private double path;
 
     private KbdSensor ks;
 
@@ -33,7 +34,7 @@ public class DataTracker : MonoBehaviour
     {
         ms = new MouseSensor();
         ks = new KbdSensor();
-      
+
         area = 0;
 
         //threadCounter = 0;
@@ -52,15 +53,16 @@ public class DataTracker : MonoBehaviour
     private void UpdateData()
     {
         var prevMouseMoving = ms.isMoving;
-        ms.UpdateMouse();
+        ms.UpdateMouse(Input.mousePosition.x, Input.mousePosition.y);
 
         if (prevMouseMoving && !ms.isMoving)
         {
-            area = ms.Area();
+            area = ms.AreaNorm();
+            path = ms.PathNorm();
             ms.ClearDataPoints();
         }
 
-    
+
 
         // ks.resetKeyPresses();
     }
@@ -70,6 +72,7 @@ public class DataTracker : MonoBehaviour
         text.text = "x- " + ms.x.ToString() + "\ny- " + ms.y.ToString();
         text.text += "\nmoving- " + ms.isMoving.ToString();
         text.text += "\narea- " + area.ToString("N3");
+        text.text += "\npath- " + path.ToString("N3");
         text.text += "\nvelocity- " + (10 * ms.Velocity()).ToString("N3") + "\naccel- " + (10 * ms.Acceleration()).ToString("N3");
         text.text += "\nkbd press - " + ks.NumOfKeyPress().ToString();
         text.text += "\nName = " + WindowData.GetActiveFileNameTitle();
@@ -82,7 +85,7 @@ public class DataTracker : MonoBehaviour
     public void OnDestroy()
     {
         ks.Dispose();
-     //   threadShouldRun = false;
+        //   threadShouldRun = false;
     }
 
 

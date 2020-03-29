@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class MouseSensor : IAttentionSensor
@@ -17,7 +16,7 @@ public class MouseSensor : IAttentionSensor
 
     public bool isMoving { get; private set; }
 
- //   const int DATAPOINTS = 1000;
+    //   const int DATAPOINTS = 1000;
     private List<MouseData> mouseDataPoints = new List<MouseData>();
 
     float scrollDelta;
@@ -42,7 +41,7 @@ public class MouseSensor : IAttentionSensor
 
     public void AttentionAndLikelihood(ref double attention, ref double likelihood)
 
-  //  public void getAttentionAndLikelihood(ref double attention, ref double likelihood)
+    //  public void getAttentionAndLikelihood(ref double attention, ref double likelihood)
     {
         attention = Attention();
         likelihood = Likelihood();
@@ -53,11 +52,8 @@ public class MouseSensor : IAttentionSensor
         return true;
     }
 
-    public void UpdateMouse()
+    public void UpdateMouse(float newx, float newy)
     {
-        var newx = Input.mousePosition.x;
-        var newy = Input.mousePosition.y;
-
         if ((newx == x) && (newy == y))
         {
             isMoving = false;
@@ -98,7 +94,7 @@ public class MouseSensor : IAttentionSensor
     public double Velocity(int i)
     {
         // velocity is dx/dt
-        if (mouseDataPoints.Count - i  < 2)
+        if (mouseDataPoints.Count - i < 2)
         {
             return 0;
         }
@@ -123,11 +119,11 @@ public class MouseSensor : IAttentionSensor
             return 0;
         }
 
-        var v1 = Velocity(0);
-        var v2 = Velocity(1);
+        var v1 = Velocity(i);
+        var v2 = Velocity(i + 1);
         var dt = mouseDataPoints[mouseDataPoints.Count - i - 1].t - mouseDataPoints[mouseDataPoints.Count - i - 2].t;
 
-        return (v1-v2) / dt.TotalMilliseconds;
+        return (v1 - v2) / dt.TotalMilliseconds;
     }
 
     // returns the area (approx.) between the path and the straight line between the start and end points;
@@ -158,10 +154,55 @@ public class MouseSensor : IAttentionSensor
             prevProjectedPoint.y = y1;
         }
 
-        sum /= ICogMath.Dist(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
-
         return sum;
     }
+
+    public double AreaNorm()
+    {
+        if (mouseDataPoints.Count < 2)
+        {
+            return 0;
+        }
+
+        var startPoint = mouseDataPoints[0];
+        var endPoint = mouseDataPoints[mouseDataPoints.Count - 1];
+        var lineDist = ICogMath.Dist(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
+
+        return Area() / (lineDist * lineDist);
+    }
+
+    public double Path()
+    {
+        if (mouseDataPoints.Count < 2)
+        {
+            return 0;
+        }
+
+        double res = 0;
+        var prevPoint = mouseDataPoints[0];
+        foreach (MouseData point in mouseDataPoints)
+        {
+            res += ICogMath.Dist(point.x, point.y, prevPoint.x, prevPoint.y);
+            prevPoint = point;
+        }
+
+        return res;
+    }
+
+    public double PathNorm()
+    {
+        if (mouseDataPoints.Count < 2)
+        {
+            return 0;
+        }
+
+        var startPoint = mouseDataPoints[0];
+        var endPoint = mouseDataPoints[mouseDataPoints.Count - 1];
+        var lineDist = ICogMath.Dist(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
+
+        return Path() / lineDist;
+    }
+
 
     public void ClearDataPoints()
     {

@@ -38,6 +38,21 @@ public class KbdSensor : IAttentionSensor, IDisposable
         return KeyDataPoints.Count;
     }
 
+    public int NumOfKeyPress(int t)
+    {
+        int res = 0;
+        var currentTime = System.DateTime.Now;
+        foreach (KeyData key in KeyDataPoints)
+        {
+            if ((currentTime - key.t).TotalSeconds < t)
+            {
+                res++;
+            }
+        }
+
+        return res;
+    }
+
     public void ClearAllKeyPresses()
     {
         KeyDataPoints.Clear();

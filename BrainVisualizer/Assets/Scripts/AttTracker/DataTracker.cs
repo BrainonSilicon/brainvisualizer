@@ -28,7 +28,7 @@ public class DataTracker : MonoBehaviour
     private double area;
     private double path;
 
-    private double Attention;
+    public double Attention;
 
     private String activeWindow;
 
@@ -55,7 +55,6 @@ public class DataTracker : MonoBehaviour
         //thr = new Thread(ExampleThreadFunction);
         //thr.Start();
 
-     
         textAppSwitch.enabled = false;
     }
 
@@ -68,18 +67,21 @@ public class DataTracker : MonoBehaviour
 
     private void UpdateData()
     {
-        activeWindow = WindowData.GetActiveFileNameTitle();
         var prevMouseMoving = ms.isMoving;
         ms.UpdateMouse(Input.mousePosition.x, Input.mousePosition.y);
+        bool mouseStop = prevMouseMoving && !ms.isMoving;
+        AttentionUpdate(mouseStop);
 
-        if (prevMouseMoving && !ms.isMoving)
+        activeWindow = WindowData.GetActiveFileNameTitle();
+
+        if (mouseStop)
         {
+
             area = ms.AreaNorm();
             path = ms.PathNorm();
-            AttentionUpdate();
+
             ms.ClearDataPoints();
         }
-
         ks.ClearKeyPresses(clearKeypressTime);
     }
 
@@ -96,7 +98,7 @@ public class DataTracker : MonoBehaviour
         //  text.text += "\nAttention = " +
         //  ((ms.Attention() * ms.Likelihood() + ks.Attention() * ks.Likelihood()) / (ms.Likelihood() + ks.Likelihood())).ToString();
 
-        textAttention.text = "Attention - " + Attention.ToString();
+        textAttention.text = "Attention - " + Attention.ToString("N1");
     }
 
     public void OnDestroy()
@@ -105,28 +107,26 @@ public class DataTracker : MonoBehaviour
         //   threadShouldRun = false;
     }
 
-    private void AttentionUpdate()
+    private void AttentionUpdate(bool mouseStop)
     {
-        MousePathAttentionUpdate();
+        if (mouseStop) MousePathAttentionUpdate();
         AppSwitchAttentionUpdate();
     }
 
     private void MousePathAttentionUpdate()
     {
-        var dAttention = 100 - Attention;
         if (path < 1.5)
         {
-            Attention += 3.0 * dAttention / 100;
+            ChangeAttentionPoints(3);
             ms.DrawPath(MousePath, MousePathColorHighAttention, MousePathStartWin, MousePathEndWin);
         }
         else
         {
-            Attention -= 3.0 * dAttention / 100;
+            ChangeAttentionPoints(-3);
             ms.DrawPath(MousePath, MousePathColorLowAttention, MousePathStartWin, MousePathEndWin);
         }
 
-        if (Attention > 100) Attention = 100;
-        if (Attention < 0) Attention = 0;
+      
 
         ms.DrawStartEnd(MouseStartEnd, MouseStartEndColor, MousePathStartWin, MousePathEndWin);
     }
@@ -135,15 +135,32 @@ public class DataTracker : MonoBehaviour
     {
         if (activeWindow != WindowData.GetActiveFileNameTitle())
         {
+            ChangeAttentionPoints(-10);
             textAppSwitch.enabled = true;
             Invoke("DisableText", 1f);
 
         }
     }
 
-    void DisableText()
+    private void DisableText()
     {
         textAppSwitch.enabled = false;
+    }
+
+    private void ChangeAttentionPoints(double points)
+    {
+        if (points > 0)
+        {
+            var dAttention = 100 - Attention;
+            Attention += points * dAttention / 100;
+        }
+        else
+        {
+            Attention += points * Attention / 100;
+        }
+
+        if (Attention > 100) Attention = 100;
+        if (Attention < 0) Attention = 0;
     }
 }
 

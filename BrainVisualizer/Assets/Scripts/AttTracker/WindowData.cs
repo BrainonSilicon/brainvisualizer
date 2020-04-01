@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
-
-
 
 public class WindowData
 {
@@ -29,14 +26,17 @@ public class WindowData
             return "Unknown";
         }
 #else
-    // [Foundation.Register("NSWorkspace", true)]
-    //public class NSWorkspace : Foundation.NSObject
+        // [Foundation.Register("NSWorkspace", true)]
+        //public class NSWorkspace : Foundation.NSObject
 
 
-    //    var foreground_app = NSWorkspace.SharedWorkspace.FrontmostApplication;
-    //    Console.WriteLine($"Name: {foreground_app.LocalizedName}");
-    //    Console.WriteLine($"Pid: {foreground_app.ProcessIdentifier}");
-        return "Not implemented";
+
+        //var foreground_app = NSWorkspace.SharedWorkspace.FrontmostApplication;
+        //Console.WriteLine($"Name: {foreground_app.LocalizedName}");
+        //Console.WriteLine($"Pid: {foreground_app.ProcessIdentifier}");
+        var currentProcess = System.Diagnostics.Process.GetCurrentProcess();
+        return currentProcess.ProcessName;
+      //  return "Not implemented";
 #endif
     }
 }

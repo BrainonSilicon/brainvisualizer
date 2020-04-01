@@ -60,6 +60,7 @@ public class MouseSensor : IAttentionSensor
             return;
         }
 
+
         isMoving = true;
 
         x = newx;
@@ -142,7 +143,6 @@ public class MouseSensor : IAttentionSensor
         var endPoint = mouseDataPoints[mouseDataPoints.Count - 1];
         ICogMath.GetABC(startPoint.x, startPoint.y, endPoint.x, endPoint.y, ref a, ref b, ref c);
         var prevProjectedPoint = mouseDataPoints[0];
-        //Debug.Log(mouseDataPoints.Count);
         foreach (MouseData point in mouseDataPoints)
         {
             double x1 = new double();
@@ -209,4 +209,98 @@ public class MouseSensor : IAttentionSensor
         mouseDataPoints.Clear();
     }
 
+
+    // unity only
+    public void DrawPath(GameObject mousePathWindow, Color color, Vector3 startWin, Vector3 endWin)
+    {
+        if (mouseDataPoints.Count < 2)
+            return;
+
+        LineRenderer lr = mousePathWindow.GetComponent<LineRenderer>();
+        if (lr == null)
+        {
+            mousePathWindow.AddComponent<LineRenderer>();
+
+            lr = mousePathWindow.GetComponent<LineRenderer>();
+        }
+
+        lr.material.color = color;
+        lr.startWidth = 0.03f;
+        lr.endWidth = 0.03f;
+
+
+        var maxx = mouseDataPoints[0].x;
+        var minx = mouseDataPoints[0].x;
+        var maxy = mouseDataPoints[0].y;
+        var miny = mouseDataPoints[0].y;
+        foreach (MouseData point in mouseDataPoints)
+        {
+            if (point.x > maxx) maxx = point.x;
+            if (point.x < minx) minx = point.x;
+            if (point.y > maxy) maxy = point.y;
+            if (point.y < miny) miny = point.y;
+        }
+        var dx = maxx - minx;
+        var dy = maxy - miny;
+
+        Vector3[] allVertices = new Vector3[mouseDataPoints.Count];
+        int i = 0;
+        foreach (MouseData point in mouseDataPoints)
+        {
+            allVertices[i].x = (float)((point.x - minx) / dx) + startWin.x;
+            allVertices[i].y = (float)((point.y - miny) / dy) + startWin.y;
+            allVertices[i].z = 0;
+            i++;
+        }
+
+        lr.positionCount = allVertices.Length;
+        lr.SetPositions(allVertices);
+    }
+
+
+
+
+    public void DrawStartEnd(GameObject mousePathWindow, Color color, Vector3 startWin, Vector3 endWin)
+    {
+        if (mouseDataPoints.Count < 2)
+            return;
+
+        //   mousePathWindow.AddComponent<LineRenderer>();
+        LineRenderer lr = mousePathWindow.GetComponent<LineRenderer>();
+        if (lr == null)
+        {
+            mousePathWindow.AddComponent<LineRenderer>();
+
+            lr = mousePathWindow.GetComponent<LineRenderer>();
+        }
+
+        lr.material.color = color;
+        lr.startWidth = 0.05f;
+        lr.endWidth = 0.05f;
+        var maxx = mouseDataPoints[0].x;
+        var minx = mouseDataPoints[0].x;
+        var maxy = mouseDataPoints[0].y;
+        var miny = mouseDataPoints[0].y;
+        foreach (MouseData point in mouseDataPoints)
+        {
+            if (point.x > maxx) maxx = point.x;
+            if (point.x < minx) minx = point.x;
+            if (point.y > maxy) maxy = point.y;
+            if (point.y < miny) miny = point.y;
+        }
+        var dx = maxx - minx;
+        var dy = maxy - miny;
+
+        Vector3[] startEndLine = new Vector3[2];
+
+        startEndLine[0].x = (float)((mouseDataPoints[0].x - minx) / dx) + startWin.x;
+        startEndLine[0].y = (float)((mouseDataPoints[0].y - miny) / dy) + startWin.y;
+        startEndLine[0].z = 0;
+        startEndLine[1].x = (float)((mouseDataPoints[mouseDataPoints.Count - 1].x - minx) / dx) + startWin.x;
+        startEndLine[1].y = (float)((mouseDataPoints[mouseDataPoints.Count - 1].y - miny) / dy) + startWin.y;
+        startEndLine[1].z = 0;
+
+        lr.positionCount = startEndLine.Length;
+        lr.SetPositions(startEndLine);
+    }
 }

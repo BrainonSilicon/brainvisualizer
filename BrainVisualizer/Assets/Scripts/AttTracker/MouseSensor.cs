@@ -1,8 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class MouseSensor : IAttentionSensor
+public class MouseSensor : MonoBehaviour, IAttentionSensor
 {
+    public Color colorHighAttention;
+    public Color colorLowAttention;
+    public Color colorStartEnd;
+    public GameObject linePath;
+    public GameObject lineStartEnd;
+
     struct MouseData
     {
         public double x;
@@ -211,20 +217,20 @@ public class MouseSensor : IAttentionSensor
 
 
     // unity only
-    public void DrawPath(GameObject mousePathWindow, Color color, Vector3 startWin, Vector3 endWin)
-    {
+    public void DrawPath(bool isHighAttention) // , Vector3 startWin, Vector3 endWin)
+    { 
+        var startWinX = transform.position.x - transform.lossyScale.x/2;
+        var startWinY = transform.position.y - transform.lossyScale.y/2;
+        var endWinX = transform.position.x + transform.lossyScale.x/2;
+        var endWinY = transform.position.y + transform.lossyScale.y/2;
+
         if (mouseDataPoints.Count < 2)
             return;
 
-        LineRenderer lr = mousePathWindow.GetComponent<LineRenderer>();
-        if (lr == null)
-        {
-            mousePathWindow.AddComponent<LineRenderer>();
+        LineRenderer lr = linePath.GetComponent<LineRenderer>();
 
-            lr = mousePathWindow.GetComponent<LineRenderer>();
-        }
-
-        lr.material.color = color;
+        lr.material.color = isHighAttention ? colorHighAttention : colorLowAttention;
+      
         lr.startWidth = 0.03f;
         lr.endWidth = 0.03f;
 
@@ -242,13 +248,15 @@ public class MouseSensor : IAttentionSensor
         }
         var dx = maxx - minx;
         var dy = maxy - miny;
+        var xscale = endWinX - startWinX;
+        var yscale = endWinY - startWinY;
 
         Vector3[] allVertices = new Vector3[mouseDataPoints.Count];
         int i = 0;
         foreach (MouseData point in mouseDataPoints)
         {
-            allVertices[i].x = (float)((point.x - minx) / dx) + startWin.x;
-            allVertices[i].y = (float)((point.y - miny) / dy) + startWin.y;
+            allVertices[i].x = (float)((point.x - minx) / dx) * xscale + startWinX;
+            allVertices[i].y = (float)((point.y - miny) / dy) * yscale + startWinY;
             allVertices[i].z = 0;
             i++;
         }
@@ -260,21 +268,19 @@ public class MouseSensor : IAttentionSensor
 
 
 
-    public void DrawStartEnd(GameObject mousePathWindow, Color color, Vector3 startWin, Vector3 endWin)
+    public void DrawStartEnd(bool isHighAttention) // Vector3 startWin, Vector3 endWin)
     {
+        var startWinX = transform.position.x - transform.lossyScale.x/2;
+        var startWinY = transform.position.y - transform.lossyScale.y/2;
+        var endWinX = transform.position.x + transform.lossyScale.x/2;
+        var endWinY = transform.position.y + transform.lossyScale.y/2;
+
         if (mouseDataPoints.Count < 2)
             return;
 
-        //   mousePathWindow.AddComponent<LineRenderer>();
-        LineRenderer lr = mousePathWindow.GetComponent<LineRenderer>();
-        if (lr == null)
-        {
-            mousePathWindow.AddComponent<LineRenderer>();
+        LineRenderer lr = lineStartEnd.GetComponent<LineRenderer>();
 
-            lr = mousePathWindow.GetComponent<LineRenderer>();
-        }
-
-        lr.material.color = color;
+        lr.material.color = colorStartEnd;
         lr.startWidth = 0.05f;
         lr.endWidth = 0.05f;
         var maxx = mouseDataPoints[0].x;
@@ -290,14 +296,16 @@ public class MouseSensor : IAttentionSensor
         }
         var dx = maxx - minx;
         var dy = maxy - miny;
+        var xscale = endWinX - startWinX;
+        var yscale = endWinY - startWinY;
 
         Vector3[] startEndLine = new Vector3[2];
 
-        startEndLine[0].x = (float)((mouseDataPoints[0].x - minx) / dx) + startWin.x;
-        startEndLine[0].y = (float)((mouseDataPoints[0].y - miny) / dy) + startWin.y;
+        startEndLine[0].x = (float)((mouseDataPoints[0].x - minx) / dx) * xscale + startWinX;
+        startEndLine[0].y = (float)((mouseDataPoints[0].y - miny) / dy) * yscale + startWinY;
         startEndLine[0].z = 0;
-        startEndLine[1].x = (float)((mouseDataPoints[mouseDataPoints.Count - 1].x - minx) / dx) + startWin.x;
-        startEndLine[1].y = (float)((mouseDataPoints[mouseDataPoints.Count - 1].y - miny) / dy) + startWin.y;
+        startEndLine[1].x = (float)((mouseDataPoints[mouseDataPoints.Count - 1].x - minx) / dx) * xscale + startWinX;
+        startEndLine[1].y = (float)((mouseDataPoints[mouseDataPoints.Count - 1].y - miny) / dy) * yscale + startWinY;
         startEndLine[1].z = 0;
 
         lr.positionCount = startEndLine.Length;

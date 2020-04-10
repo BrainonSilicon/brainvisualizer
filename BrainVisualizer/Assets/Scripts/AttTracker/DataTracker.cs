@@ -13,18 +13,19 @@ public class DataTracker : MonoBehaviour
     public UnityEngine.UI.Text textAppSwitch;
     public int threadSleepTimeInMS;
     public int clearKeypressTime;
-    public GameObject MousePath;
+   // public GameObject MousePath;
     public GameObject MouseStartEnd;
-    public Color MousePathColorHighAttention;
-    public Color MousePathColorLowAttention;
-    public Color MouseStartEndColor;
+    //    public Color MousePathColorHighAttention;
+    //    public Color MousePathColorLowAttention;
+    //    public Color MouseStartEndColor;
+    public double MousePathRatioThreshold;
     public Vector3 MousePathStartWin;
     public Vector3 MousePathEndWin;
     private int threadCounter;
     private Thread thr;
     private bool threadShouldRun;
 
-    private MouseSensor ms;
+    public MouseSensor ms;
     private double area;
     private double path;
 
@@ -45,7 +46,7 @@ public class DataTracker : MonoBehaviour
 
     private void Start()
     {
-        ms = new MouseSensor();
+     //   ms = new MouseSensor();
         ks = new KbdSensor();
 
         area = 0;
@@ -70,18 +71,17 @@ public class DataTracker : MonoBehaviour
         var prevMouseMoving = ms.isMoving;
         ms.UpdateMouse(Input.mousePosition.x, Input.mousePosition.y);
         bool mouseStop = prevMouseMoving && !ms.isMoving;
-        AttentionUpdate(mouseStop);
 
         activeWindow = WindowData.GetActiveFileNameTitle();
 
         if (mouseStop)
         {
-
             area = ms.AreaNorm();
-            path = ms.PathNorm();
-
-            ms.ClearDataPoints();
+            path = ms.PathNorm();   
         }
+        AttentionUpdate(mouseStop);
+
+        if (mouseStop) ms.ClearDataPoints();
         ks.ClearKeyPresses(clearKeypressTime);
     }
 
@@ -115,20 +115,20 @@ public class DataTracker : MonoBehaviour
 
     private void MousePathAttentionUpdate()
     {
-        if (path < 1.5)
+        if (path < MousePathRatioThreshold)
         {
             ChangeAttentionPoints(3);
-            ms.DrawPath(MousePath, MousePathColorHighAttention, MousePathStartWin, MousePathEndWin);
+            ms.DrawPath(true); //, MousePathStartWin, MousePathEndWin);
         }
         else
         {
             ChangeAttentionPoints(-3);
-            ms.DrawPath(MousePath, MousePathColorLowAttention, MousePathStartWin, MousePathEndWin);
+            ms.DrawPath(false); //, MousePathStartWin, MousePathEndWin);
         }
 
-      
 
-        ms.DrawStartEnd(MouseStartEnd, MouseStartEndColor, MousePathStartWin, MousePathEndWin);
+
+        ms.DrawStartEnd(MouseStartEnd); //, MousePathStartWin, MousePathEndWin);
     }
 
     private void AppSwitchAttentionUpdate()

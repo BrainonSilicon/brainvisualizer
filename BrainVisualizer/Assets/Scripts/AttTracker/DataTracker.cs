@@ -13,14 +13,7 @@ public class DataTracker : MonoBehaviour
     public UnityEngine.UI.Text textAppSwitch;
     public int threadSleepTimeInMS;
     public int clearKeypressTime;
-   // public GameObject MousePath;
-    public GameObject MouseStartEnd;
-    //    public Color MousePathColorHighAttention;
-    //    public Color MousePathColorLowAttention;
-    //    public Color MouseStartEndColor;
     public double MousePathRatioThreshold;
-    public Vector3 MousePathStartWin;
-    public Vector3 MousePathEndWin;
     private int threadCounter;
     private Thread thr;
     private bool threadShouldRun;
@@ -128,7 +121,7 @@ public class DataTracker : MonoBehaviour
 
 
 
-        ms.DrawStartEnd(MouseStartEnd); //, MousePathStartWin, MousePathEndWin);
+        ms.DrawStartEnd(); //, MousePathStartWin, MousePathEndWin);
     }
 
     private void AppSwitchAttentionUpdate()

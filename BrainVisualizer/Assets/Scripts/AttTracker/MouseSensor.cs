@@ -8,6 +8,7 @@ public class MouseSensor : MonoBehaviour, IAttentionSensor
     public Color colorStartEnd;
     public GameObject linePath;
     public GameObject lineStartEnd;
+    public float lineWidth;
 
     struct MouseData
     {
@@ -231,8 +232,8 @@ public class MouseSensor : MonoBehaviour, IAttentionSensor
 
         lr.material.color = isHighAttention ? colorHighAttention : colorLowAttention;
       
-        lr.startWidth = 0.03f;
-        lr.endWidth = 0.03f;
+        lr.startWidth = lineWidth;
+        lr.endWidth = lineWidth;
 
 
         var maxx = mouseDataPoints[0].x;
@@ -268,7 +269,7 @@ public class MouseSensor : MonoBehaviour, IAttentionSensor
 
 
 
-    public void DrawStartEnd(bool isHighAttention) // Vector3 startWin, Vector3 endWin)
+    public void DrawStartEnd() // Vector3 startWin, Vector3 endWin)
     {
         var startWinX = transform.position.x - transform.lossyScale.x/2;
         var startWinY = transform.position.y - transform.lossyScale.y/2;
@@ -281,8 +282,8 @@ public class MouseSensor : MonoBehaviour, IAttentionSensor
         LineRenderer lr = lineStartEnd.GetComponent<LineRenderer>();
 
         lr.material.color = colorStartEnd;
-        lr.startWidth = 0.05f;
-        lr.endWidth = 0.05f;
+        lr.startWidth = lineWidth;
+        lr.endWidth = lineWidth;
         var maxx = mouseDataPoints[0].x;
         var minx = mouseDataPoints[0].x;
         var maxy = mouseDataPoints[0].y;

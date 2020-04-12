@@ -62,7 +62,12 @@ public class DataTracker : MonoBehaviour
     private void UpdateData()
     {
         var prevMouseMoving = ms.isMoving;
-        ms.UpdateMouse(Input.mousePosition.x, Input.mousePosition.y);
+
+        Vector3 screenPos = Input.mousePosition;
+        screenPos.z = 10.0f;
+        Vector3 canvasPos = Camera.main.ScreenToWorldPoint(screenPos);
+
+        ms.UpdateMouse(canvasPos.x, canvasPos.y);
         bool mouseStop = prevMouseMoving && !ms.isMoving;
 
         activeWindow = WindowData.GetActiveFileNameTitle();

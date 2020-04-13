@@ -63,9 +63,15 @@ public class KbdSensor : IAttentionSensor, IDisposable
         var currentTime = System.DateTime.Now;
         foreach (KeyData key in KeyDataPoints)
         {
-            if ((currentTime - key.t).TotalSeconds > t)
+            try
             {
-                KeyDataPoints.Remove(key);
+                if ((currentTime - key.t).TotalSeconds > t)
+                {
+                    KeyDataPoints.Remove(key);
+                }
+            } catch
+            {
+                // do nothing
             }
         }
     }

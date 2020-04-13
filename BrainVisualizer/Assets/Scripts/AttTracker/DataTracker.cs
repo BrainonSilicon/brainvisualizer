@@ -87,6 +87,7 @@ public class DataTracker : MonoBehaviour
 
         if (mouseStop) ms.ClearDataPoints();
         ks.ClearKeyPresses(clearKeypressTime);
+        ks.ClearWords(clearKeypressTime);
     }
 
     private void DisplayDataOnScreen()
@@ -116,6 +117,7 @@ public class DataTracker : MonoBehaviour
     {
         keyboardtext.text = "";
         keyboardtext.text += "kbd press - " + ks.NumOfKeyPress().ToString();
+        keyboardtext.text += "\nWord - " + ks.NumOfWords().ToString();
     }
 
     public void DisplayAppText()
@@ -153,8 +155,6 @@ public class DataTracker : MonoBehaviour
             ChangeAttentionPoints(-3);
             ms.DrawPath(false); //, MousePathStartWin, MousePathEndWin);
         }
-
-
 
         ms.DrawStartEnd(); //, MousePathStartWin, MousePathEndWin);
     }

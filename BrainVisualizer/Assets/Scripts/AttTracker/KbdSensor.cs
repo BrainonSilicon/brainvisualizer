@@ -9,6 +9,7 @@ public class KbdSensor : IAttentionSensor, IDisposable
     }
 
     private List<KeyData> KeyDataPoints = new List<KeyData>();
+    private List<KeyData> WordsDataPoints = new List<KeyData>();
 
 #if UNITY_STANDALONE_WIN
     private GlobalKeyboardHook _globalKeyboardHook;
@@ -29,6 +30,11 @@ public class KbdSensor : IAttentionSensor, IDisposable
             KeyData data = new KeyData();
             data.t = System.DateTime.Now;
             KeyDataPoints.Add(data);
+            if ((e.KeyboardData.VirtualCode == 32) ||
+                (e.KeyboardData.VirtualCode == 13))
+            {
+                WordsDataPoints.Add(data);
+            }
         }
     }
 #endif
@@ -37,6 +43,8 @@ public class KbdSensor : IAttentionSensor, IDisposable
     {
         return KeyDataPoints.Count;
     }
+
+
 
     public int NumOfKeyPress(int t)
     {
@@ -53,11 +61,36 @@ public class KbdSensor : IAttentionSensor, IDisposable
         return res;
     }
 
+    public int NumOfWords()
+    {
+        return WordsDataPoints.Count;
+    }
+
+    public int NumOfWords(int t)
+    {
+        int res = 0;
+        var currentTime = System.DateTime.Now;
+        foreach (KeyData word in WordsDataPoints)
+        {
+            if ((currentTime - word.t).TotalSeconds < t)
+            {
+                res++;
+            }
+        }
+
+        return res;
+    }
+
     public void ClearAllKeyPresses()
     {
         KeyDataPoints.Clear();
     }
-    
+
+    public void ClearAllWords()
+    {
+        WordsDataPoints.Clear();
+    }
+
     public void ClearKeyPresses(int t)
     {
         var currentTime = System.DateTime.Now;
@@ -70,6 +103,25 @@ public class KbdSensor : IAttentionSensor, IDisposable
                     KeyDataPoints.Remove(key);
                 }
             } catch
+            {
+                // do nothing
+            }
+        }
+    }
+
+    public void ClearWords(int t)
+    {
+        var currentTime = System.DateTime.Now;
+        foreach (KeyData word in WordsDataPoints)
+        {
+            try
+            {
+                if ((currentTime - word.t).TotalSeconds > t)
+                {
+                    WordsDataPoints.Remove(word);
+                }
+            }
+            catch
             {
                 // do nothing
             }

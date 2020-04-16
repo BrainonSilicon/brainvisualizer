@@ -17,6 +17,7 @@ public class DataTracker : MonoBehaviour
     public int threadSleepTimeInMS;
     public int clearKeypressTime;
     public double MousePathRatioThreshold;
+    public TaskChartDrawer tasksChart;
     private int threadCounter;
     private Thread thr;
     private bool threadShouldRun;
@@ -25,6 +26,8 @@ public class DataTracker : MonoBehaviour
     public MouseSensor ms;
     private double area;
     private double path;
+
+    private AppsOrganizer appsOrganizer = new AppsOrganizer();
 
     public double Attention;
 
@@ -54,8 +57,9 @@ public class DataTracker : MonoBehaviour
         //thr.Start();
 
         textAppSwitch.enabled = false;
-        textAllAppTime.text = WindowData.GetActiveFileNameTitle() + ": ";
-        textAllAppTime.text += DateTime.Now.ToString("h:mm:ss tt");
+        textAllAppTime.text = DateTime.Now.ToString("h:mm  ");
+        activeWindow = WindowData.GetActiveFileNameTitle();
+        textAllAppTime.text += activeWindow;
     }
 
     // Update is called once per frame
@@ -96,28 +100,34 @@ public class DataTracker : MonoBehaviour
         DisplayKBDText();
         DisplayAppText();
         DisplayAttentionText();
-
+        DisplayTasksChart();
         //  text.text += "\nAttention = " +
         //  ((ms.Attention() * ms.Likelihood() + ks.Attention() * ks.Likelihood()) / (ms.Likelihood() + ks.Likelihood())).ToString();
 
 
     }
 
+    private void DisplayTasksChart()
+    {
+        tasksChart.DrawLine();
+    }
+
     public void DisplayMouseText()
     {
         mousetext.text = "";
-        mousetext.text += "x- " + ms.x.ToString() + "\ny- " + ms.y.ToString();
-        mousetext.text += "\nmoving- " + ms.isMoving.ToString();
-        mousetext.text += "\narea- " + area.ToString("N6");
-        mousetext.text += "\npath- " + path.ToString("N6");
-        mousetext.text += "\nvelocity- " + (10 * ms.Velocity()).ToString("N3") + "\naccel- " + (10 * ms.Acceleration()).ToString("N3");
+        //   mousetext.text += "x- " + ms.x.ToString() + "\ny- " + ms.y.ToString();
+        //   mousetext.text += "\nmoving- " + ms.isMoving.ToString();
+        mousetext.text += "area- " + area.ToString("N2");
+        mousetext.text += ",      path- " + path.ToString("N2");
+        mousetext.text += "\nvelocity- " + (10 * ms.Velocity()).ToString("N2");
+        mousetext.text += ", accel- " + (10 * ms.Acceleration()).ToString("N2");
     }
 
     public void DisplayKBDText()
     {
         keyboardtext.text = "";
-        keyboardtext.text += "kbd press - " + ks.NumOfKeyPress().ToString();
-        keyboardtext.text += "\nWord - " + ks.NumOfWords().ToString();
+        keyboardtext.text += "Key count - " + ks.NumOfKeyPress().ToString();
+        keyboardtext.text += ", Word wount - " + ks.NumOfWords().ToString();
     }
 
     public void DisplayAppText()
@@ -177,9 +187,12 @@ public class DataTracker : MonoBehaviour
 
             if (WindowData.GetActiveFileNameTitle() != "Unknown")
             {
-                textAllAppTime.text += " - " + DateTime.Now.ToString("h:mm:ss tt") + "\n";
-                textAllAppTime.text += WindowData.GetActiveFileNameTitle() + ": ";
-                textAllAppTime.text += DateTime.Now.ToString("h:mm:ss tt");
+                textAllAppTime.text += "\n" + DateTime.Now.ToString("h:mm  ");
+                textAllAppTime.text += WindowData.GetActiveFileNameTitle();
+                //var rect = textAllAppTime.rectTransform.rect;
+                //rect.height += 46;
+                tasksChart.AddDataPoint(appsOrganizer.Distance(activeWindow, WindowData.GetActiveFileNameTitle()));
+
             }
         }
     }

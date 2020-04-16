@@ -219,11 +219,11 @@ public class MouseSensor : MonoBehaviour, IAttentionSensor
 
     // unity only
     public void DrawPath(bool isHighAttention) // , Vector3 startWin, Vector3 endWin)
-    { 
-        var startWinX = transform.position.x - transform.lossyScale.x/2;
-        var startWinY = transform.position.y - transform.lossyScale.y/2;
-        var endWinX = transform.position.x + transform.lossyScale.x/2;
-        var endWinY = transform.position.y + transform.lossyScale.y/2;
+    {
+        var startWinX = transform.position.x - transform.lossyScale.x / 2;
+        var startWinY = transform.position.y - transform.lossyScale.y / 2;
+        var endWinX = transform.position.x + transform.lossyScale.x / 2;
+        var endWinY = transform.position.y + transform.lossyScale.y / 2;
 
         if (mouseDataPoints.Count < 2)
             return;
@@ -231,7 +231,7 @@ public class MouseSensor : MonoBehaviour, IAttentionSensor
         LineRenderer lr = linePath.GetComponent<LineRenderer>();
 
         lr.material.color = isHighAttention ? colorHighAttention : colorLowAttention;
-      
+
         lr.startWidth = lineWidth;
         lr.endWidth = lineWidth;
 
@@ -256,8 +256,8 @@ public class MouseSensor : MonoBehaviour, IAttentionSensor
         int i = 0;
         foreach (MouseData point in mouseDataPoints)
         {
-            allVertices[i].x = (float)((point.x - minx) / dx) * xscale + startWinX;
-            allVertices[i].y = (float)((point.y - miny) / dy) * yscale + startWinY;
+            allVertices[i].x = (dx != 0) ? (float)((point.x - minx) / dx) * xscale + startWinX : startWinX;
+            allVertices[i].y = (dy != 0) ? (float)((point.y - miny) / dy) * yscale + startWinY : startWinY;
             allVertices[i].z = 0;
             i++;
         }
@@ -271,10 +271,10 @@ public class MouseSensor : MonoBehaviour, IAttentionSensor
 
     public void DrawStartEnd() // Vector3 startWin, Vector3 endWin)
     {
-        var startWinX = transform.position.x - transform.lossyScale.x/2;
-        var startWinY = transform.position.y - transform.lossyScale.y/2;
-        var endWinX = transform.position.x + transform.lossyScale.x/2;
-        var endWinY = transform.position.y + transform.lossyScale.y/2;
+        var startWinX = transform.position.x - transform.lossyScale.x / 2;
+        var startWinY = transform.position.y - transform.lossyScale.y / 2;
+        var endWinX = transform.position.x + transform.lossyScale.x / 2;
+        var endWinY = transform.position.y + transform.lossyScale.y / 2;
 
         if (mouseDataPoints.Count < 2)
             return;
@@ -302,11 +302,11 @@ public class MouseSensor : MonoBehaviour, IAttentionSensor
 
         Vector3[] startEndLine = new Vector3[2];
 
-        startEndLine[0].x = (float)((mouseDataPoints[0].x - minx) / dx) * xscale + startWinX;
-        startEndLine[0].y = (float)((mouseDataPoints[0].y - miny) / dy) * yscale + startWinY;
+        startEndLine[0].x = (dx != 0) ? (float)((mouseDataPoints[0].x - minx) / dx) * xscale + startWinX : startWinX;
+        startEndLine[0].y = (dy != 0) ? (float)((mouseDataPoints[0].y - miny) / dy) * yscale + startWinY : startWinY;
         startEndLine[0].z = 0;
-        startEndLine[1].x = (float)((mouseDataPoints[mouseDataPoints.Count - 1].x - minx) / dx) * xscale + startWinX;
-        startEndLine[1].y = (float)((mouseDataPoints[mouseDataPoints.Count - 1].y - miny) / dy) * yscale + startWinY;
+        startEndLine[1].x = (dx != 0) ? (float)((mouseDataPoints[mouseDataPoints.Count - 1].x - minx) / dx) * xscale + startWinX : startWinX;
+        startEndLine[1].y = (dy != 0) ? (float)((mouseDataPoints[mouseDataPoints.Count - 1].y - miny) / dy) * yscale + startWinY : startWinY;
         startEndLine[1].z = 0;
 
         lr.positionCount = startEndLine.Length;

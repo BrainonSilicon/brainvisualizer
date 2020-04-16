@@ -80,7 +80,6 @@ public class DataTracker : MonoBehaviour
         ms.UpdateMouse(screenPos.x, screenPos.y);
         bool mouseStop = prevMouseMoving && !ms.isMoving;
 
-        activeWindow = WindowData.GetActiveFileNameTitle();
 
         if (mouseStop)
         {
@@ -182,16 +181,17 @@ public class DataTracker : MonoBehaviour
     {
         if (activeWindow != WindowData.GetActiveFileNameTitle())
         {
-            textAppSwitch.enabled = true;
-            Invoke("DisableText", 1f);
-
             if (WindowData.GetActiveFileNameTitle() != "Unknown")
             {
+                textAppSwitch.enabled = true;
+                Invoke("DisableText", 1f);
+
                 textAllAppTime.text += "\n" + DateTime.Now.ToString("h:mm  ");
                 textAllAppTime.text += WindowData.GetActiveFileNameTitle();
                 //var rect = textAllAppTime.rectTransform.rect;
                 //rect.height += 46;
                 tasksChart.AddDataPoint(appsOrganizer.Distance(activeWindow, WindowData.GetActiveFileNameTitle()));
+                activeWindow = WindowData.GetActiveFileNameTitle();
 
             }
         }

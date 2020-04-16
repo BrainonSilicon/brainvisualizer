@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AppsOrganizer
 {
-    public HashSet<HashSet<string>> allGroups;
+    private HashSet<HashSet<string>> allGroups = new HashSet<HashSet<string>>();
 
     public AppsOrganizer()
     {
@@ -24,10 +24,19 @@ public class AppsOrganizer
         }
 
         if (!foundOne || !foundTwo)
-            return 0;
+        {
+            Debug.Log(one + " " + two + "20");
+            return 20;
+        }
 
         if (foundBothInSameSet)
+        {
+            Debug.Log(one + " " + two + "1");
+
             return 1;
+        }
+
+        Debug.Log(one + " " + two + "10");
 
         return 10;
     }
@@ -36,7 +45,13 @@ public class AppsOrganizer
     {
         HashSet<string> set1 = new HashSet<string>();
         set1.Add("Unity");
+        set1.Add("devenv");
         allGroups.Add(set1);
+
+        HashSet<string> set2 = new HashSet<string>();
+        set2.Add("mspaint");
+        set2.Add("wordpad");
+        allGroups.Add(set2);
     }
 
 }

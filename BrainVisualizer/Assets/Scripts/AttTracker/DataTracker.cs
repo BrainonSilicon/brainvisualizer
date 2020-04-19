@@ -125,8 +125,8 @@ public class DataTracker : MonoBehaviour
     public void DisplayKBDText()
     {
         keyboardtext.text = "";
-        keyboardtext.text += "Key count - " + ks.NumOfKeyPress().ToString();
-        keyboardtext.text += ", Word wount - " + ks.NumOfWords().ToString();
+        keyboardtext.text += "Key - " + ((float)ks.NumOfKeyPress()* clearKeypressTime/60).ToString("N2") + "Hz";
+        keyboardtext.text += ", Word - " + ((float)ks.NumOfWords()*clearKeypressTime/60).ToString("N2")+ "Hz";
     }
 
     public void DisplayAppText()

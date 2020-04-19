@@ -258,7 +258,7 @@ public class MouseSensor : MonoBehaviour, IAttentionSensor
         {
             allVertices[i].x = (dx != 0) ? (float)((point.x - minx) / dx) * xscale + startWinX : startWinX;
             allVertices[i].y = (dy != 0) ? (float)((point.y - miny) / dy) * yscale + startWinY : startWinY;
-            allVertices[i].z = 0;
+            allVertices[i].z = transform.position.z;
             i++;
         }
 
@@ -304,10 +304,10 @@ public class MouseSensor : MonoBehaviour, IAttentionSensor
 
         startEndLine[0].x = (dx != 0) ? (float)((mouseDataPoints[0].x - minx) / dx) * xscale + startWinX : startWinX;
         startEndLine[0].y = (dy != 0) ? (float)((mouseDataPoints[0].y - miny) / dy) * yscale + startWinY : startWinY;
-        startEndLine[0].z = 0;
+        startEndLine[0].z = transform.position.z;
         startEndLine[1].x = (dx != 0) ? (float)((mouseDataPoints[mouseDataPoints.Count - 1].x - minx) / dx) * xscale + startWinX : startWinX;
         startEndLine[1].y = (dy != 0) ? (float)((mouseDataPoints[mouseDataPoints.Count - 1].y - miny) / dy) * yscale + startWinY : startWinY;
-        startEndLine[1].z = 0;
+        startEndLine[1].z = transform.position.z;
 
         lr.positionCount = startEndLine.Length;
         lr.SetPositions(startEndLine);

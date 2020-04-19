@@ -56,7 +56,7 @@ public class Attention_kbd_frequency : MonoBehaviour
     [Space(10)]
     [Header("CHARTS FOR DRAWING")]
     [Space]
-    public Transform tfTime;
+  //  public Transform tfTime;
     public Transform tfFreq;
 
     
@@ -185,7 +185,7 @@ public class Attention_kbd_frequency : MonoBehaviour
     void FixedUpdate()
     {
         //draw both charts: time-domain and frequency-domain
-        Drawing.drawChart(tfTime,X_inputValues, Y_inputValues, "time");
+   //     Drawing.drawChart(tfTime,X_inputValues, Y_inputValues, "time");
         Drawing.drawChart(tfFreq, X_inputValues, Y_output, "frequency");
     }
 

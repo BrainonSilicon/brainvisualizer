@@ -8,9 +8,10 @@ using System.Runtime.InteropServices;
 
 public class DataTracker : MonoBehaviour
 {
-    public UnityEngine.UI.Text mousetext;
-    public UnityEngine.UI.Text keyboardtext;
+    public UnityEngine.UI.Text mouseText;
+    public UnityEngine.UI.Text keyboardText;
     public UnityEngine.UI.Text appNameText;
+    public UnityEngine.UI.Text headText;
     public UnityEngine.UI.Text textAttention;
     public UnityEngine.UI.Text textAppSwitch;
     public UnityEngine.UI.Text textAllAppTime;
@@ -18,6 +19,8 @@ public class DataTracker : MonoBehaviour
     public int clearKeypressTime;
     public double MousePathRatioThreshold;
     public TaskChartDrawer tasksChart;
+    public GameObject ARObject;
+    public GameObject Head;
     private int threadCounter;
     private Thread thr;
     private bool threadShouldRun;
@@ -98,6 +101,8 @@ public class DataTracker : MonoBehaviour
         DisplayMouseText();
         DisplayKBDText();
         DisplayAppText();
+        DisplayHeadText();
+        RotateHead();
         DisplayAttentionText();
         DisplayTasksChart();
         //  text.text += "\nAttention = " +
@@ -111,31 +116,43 @@ public class DataTracker : MonoBehaviour
         tasksChart.DrawLine();
     }
 
-    public void DisplayMouseText()
+    private void DisplayMouseText()
     {
-        mousetext.text = "";
+        mouseText.text = "";
         //   mousetext.text += "x- " + ms.x.ToString() + "\ny- " + ms.y.ToString();
         //   mousetext.text += "\nmoving- " + ms.isMoving.ToString();
-        mousetext.text += "area- " + area.ToString("N2");
-        mousetext.text += ",      path- " + path.ToString("N2");
-        mousetext.text += "\nvelocity- " + (10 * ms.Velocity()).ToString("N2");
-        mousetext.text += ", accel- " + (10 * ms.Acceleration()).ToString("N2");
+        mouseText.text += "area- " + area.ToString("N2");
+        mouseText.text += ",      path- " + path.ToString("N2");
+        mouseText.text += "\nvelocity- " + (10 * ms.Velocity()).ToString("N2");
+        mouseText.text += ", accel- " + (10 * ms.Acceleration()).ToString("N2");
     }
 
     public void DisplayKBDText()
     {
-        keyboardtext.text = "";
-        keyboardtext.text += "Key - " + ((float)ks.NumOfKeyPress()* clearKeypressTime/60).ToString("N2") + "Hz";
-        keyboardtext.text += ", Word - " + ((float)ks.NumOfWords()*clearKeypressTime/60).ToString("N2")+ "Hz";
+        keyboardText.text = "";
+        keyboardText.text += "Key - " + ((float)ks.NumOfKeyPress()* clearKeypressTime/60).ToString("N2") + "Hz";
+        keyboardText.text += ", Word - " + ((float)ks.NumOfWords()*clearKeypressTime/60).ToString("N2")+ "Hz";
     }
 
-    public void DisplayAppText()
+    private void DisplayHeadText()
+    {
+        headText.text = "rx - " + ARObject.transform.rotation.eulerAngles.x.ToString("N1");
+        headText.text += ", ry - " + ARObject.transform.rotation.eulerAngles.y.ToString("N1");
+        headText.text += ", rz - " + ARObject.transform.rotation.eulerAngles.z.ToString("N1");
+    }
+
+    private void RotateHead()
+    {
+        Head.transform.rotation = ARObject.transform.rotation;
+    }
+
+    private void DisplayAppText()
     {
         appNameText.text = "Name = " + activeWindow;
         AppSwitchAttentionDisplayUpdate();
     }
 
-    public void DisplayAttentionText()
+    private void DisplayAttentionText()
     {
         textAttention.text = "Attention - " + Attention.ToString("N1");
     }

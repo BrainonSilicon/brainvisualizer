@@ -6,7 +6,7 @@ using System.Numerics;
 
 public class Attention_kbd_frequency : MonoBehaviour
 {
-    KbdSensor ks;
+    public KbdSensor ks;
     [Space]
     [Header("[!] set fixed time to 0.01f [!]")]
     [Header("TIME SIGNAL TO FREQUENCY FFT")]
@@ -62,7 +62,7 @@ public class Attention_kbd_frequency : MonoBehaviour
     
     void Start()
     {
-        ks = new KbdSensor();
+     //   ks = new KbdSensor();
 
         X_inputValues = new double[windowSize];
         Y_inputValues = new double[windowSize];
@@ -114,6 +114,7 @@ public class Attention_kbd_frequency : MonoBehaviour
 
             // Y_values.Add(signal);
             // Y_values.Add(dx);
+            Debug.Log("Adding value");
             Y_values.Add(ks.NumOfKeyPress());
 
             if (Y_values.Count >= windowSize)

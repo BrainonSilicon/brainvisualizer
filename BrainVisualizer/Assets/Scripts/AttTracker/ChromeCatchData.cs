@@ -23,12 +23,12 @@ class ChromeCatchData
 
     public bool IsChromeOpened()
     {
-        UnityEngine.Debug.Log("Checking if chrome is open");
-        List = Process.GetProcesses();
-        foreach (Process p in List)
-        {
-            UnityEngine.Debug.Log(p.ProcessName);
-        }
+        //UnityEngine.Debug.Log("Checking if chrome is open");
+        //List = Process.GetProcesses();
+        //foreach (Process p in List)
+        //{
+        //    UnityEngine.Debug.Log(p.ProcessName);
+        //}
 
         List = Process.GetProcessesByName("chrome");
         if (List.Count() == 0)
@@ -50,15 +50,19 @@ class ChromeCatchData
                 break;
             }
             else
-            {
+            { 
                 IndexProcesChrome = -1;
+                UnityEngine.Debug.Log("List size " + List.Count().ToString());
                 foreach (Process p in List)
                 {
+                    UnityEngine.Debug.Log("Process name " + p.ProcessName + " "
+                        + p.MainWindowTitle);// + " " + p.
                     IndexProcesChrome += 1;
-                    if (p.MainWindowTitle != "")
-                        break;
+                    //if (p.MainWindowTitle != "")
+                    //    break;
                 }
                 Process Proc = List[IndexProcesChrome];
+                UnityEngine.Debug.Log("Decision - " + Proc.MainWindowTitle);
                 try
                 {
                     CurrentTab = Proc.MainWindowTitle.Remove(Proc.MainWindowTitle.Length - 15);

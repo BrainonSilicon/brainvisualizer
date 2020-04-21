@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-public class KbdSensor : IAttentionSensor, IDisposable
+public class KbdSensor : MonoBehaviour, IAttentionSensor, IDisposable
 {
     private struct KeyData
     {
@@ -16,6 +17,15 @@ public class KbdSensor : IAttentionSensor, IDisposable
 #endif
     public KbdSensor()
     {
+//#if UNITY_STANDALONE_WIN
+//        _globalKeyboardHook = new GlobalKeyboardHook();
+//        _globalKeyboardHook.KeyboardPressed += OnKeyPressed;
+//#endif
+    }
+
+    private void Start()
+    {
+        Debug.Log("Started");
 #if UNITY_STANDALONE_WIN
         _globalKeyboardHook = new GlobalKeyboardHook();
         _globalKeyboardHook.KeyboardPressed += OnKeyPressed;
@@ -27,6 +37,7 @@ public class KbdSensor : IAttentionSensor, IDisposable
     {
         if (e.KeyboardState == GlobalKeyboardHook.KeyboardState.KeyDown)
         {
+            Debug.Log("Key down");
             KeyData data = new KeyData();
             data.t = System.DateTime.Now;
             KeyDataPoints.Add(data);

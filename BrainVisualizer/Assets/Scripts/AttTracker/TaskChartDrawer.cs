@@ -27,6 +27,8 @@ public class TaskChartDrawer : MonoBehaviour
 
     public void DrawLine()
     {
+  //      Debug.Log("Drawing " + LineDataPoints.Count);
+
         var startWinX = transform.position.x - transform.lossyScale.x / 2;
         var startWinY = transform.position.y - transform.lossyScale.y / 2;
         var endWinX = transform.position.x + transform.lossyScale.x / 2;
@@ -65,7 +67,7 @@ public class TaskChartDrawer : MonoBehaviour
         {
             allVertices[i].x = (dx != 0) ? (float)((point.x - minx) / dx) * xscale + startWinX : startWinX;
             allVertices[i].y = (dy != 0) ? (float)((point.y - miny) / dy) * yscale + startWinY : startWinY;
-            allVertices[i].z = 0;
+            allVertices[i].z = transform.position.z;
             i++;
         }
 

@@ -26,6 +26,9 @@ public class DataTracker : MonoBehaviour
     private bool threadShouldRun;
     private bool appSwitch = false;
 
+
+    private ChromeCatchData chromeCatcher;
+
     public MouseSensor ms;
     private double area;
     private double path;
@@ -63,6 +66,10 @@ public class DataTracker : MonoBehaviour
         textAllAppTime.text = DateTime.Now.ToString("h:mm  ");
         activeWindow = WindowData.GetActiveFileNameTitle();
         textAllAppTime.text += activeWindow;
+
+        Debug.Log("About to start Monitoring Chrome");
+        chromeCatcher = new ChromeCatchData();
+        chromeCatcher.StartMonitoring();
     }
 
     // Update is called once per frame
@@ -70,6 +77,10 @@ public class DataTracker : MonoBehaviour
     {
         DisplayDataOnScreen();
         UpdateData();
+
+   //     Debug.Log("Chrome is active - "  + chromeCatcher.IsActive.ToString());
+   //     Debug.Log("Chrome current tab - " + chromeCatcher.CurrentTab );
+
     }
 
     private void UpdateData()
@@ -160,6 +171,7 @@ public class DataTracker : MonoBehaviour
     public void OnDestroy()
     {
         ks.Dispose();
+        chromeCatcher.StopMonitoring();
         //   threadShouldRun = false;
     }
 

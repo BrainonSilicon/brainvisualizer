@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class KbdSensor : MonoBehaviour, IAttentionSensor, IDisposable
 {
+    public bool isRandom { get; set; }
+
     private struct KeyData
     {
         public System.DateTime t;
@@ -52,6 +54,11 @@ public class KbdSensor : MonoBehaviour, IAttentionSensor, IDisposable
 
     public int NumOfKeyPress()
     {
+        if (isRandom)
+        {
+            return UnityEngine.Random.Range(1, 30);
+        }
+
         return KeyDataPoints.Count;
     }
 

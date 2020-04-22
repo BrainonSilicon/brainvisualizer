@@ -27,6 +27,7 @@ public class DataTracker : MonoBehaviour
     private Thread thr;
     private bool threadShouldRun;
     private bool appSwitch = false;
+    public bool randomData = true;
 
 
   //  private ChromeCatchData chromeCatcher;
@@ -79,6 +80,7 @@ public class DataTracker : MonoBehaviour
     {
         DisplayDataOnScreen();
         UpdateData();
+        ks.isRandom = randomData;
 
         //Debug.Log("Chrome is active - " + chromeCatcher.IsActive.ToString());
         //Debug.Log("Chrome current tab - " + chromeCatcher.CurrentTab);

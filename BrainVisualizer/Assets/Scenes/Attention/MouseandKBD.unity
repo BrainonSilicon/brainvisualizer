@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.3731193, g: 0.38073996, b: 0.35872698, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2595,17 +2595,17 @@ PrefabInstance:
     - target: {fileID: 5322890320825385473, guid: 84602fc8ccf6de04898e4e4e57389268,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -32.73576
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5322890320825385473, guid: 84602fc8ccf6de04898e4e4e57389268,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -49.688206
+      value: -56.25
       objectReference: {fileID: 0}
     - target: {fileID: 5322890320825385473, guid: 84602fc8ccf6de04898e4e4e57389268,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1052.221
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5322890320825385473, guid: 84602fc8ccf6de04898e4e4e57389268,
         type: 3}
@@ -2650,23 +2650,58 @@ PrefabInstance:
     - target: {fileID: 5322890320825385473, guid: 84602fc8ccf6de04898e4e4e57389268,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 46.76537
+      value: 37
       objectReference: {fileID: 0}
     - target: {fileID: 5322890320825385473, guid: 84602fc8ccf6de04898e4e4e57389268,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 35.074028
+      value: 27
       objectReference: {fileID: 0}
     - target: {fileID: 5322890320825385473, guid: 84602fc8ccf6de04898e4e4e57389268,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 11.691342
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5322890320825385474, guid: 84602fc8ccf6de04898e4e4e57389268,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5322890320825385474, guid: 84602fc8ccf6de04898e4e4e57389268,
         type: 3}
       propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].value
       value: 0.9189148
       objectReference: {fileID: 0}
+    - target: {fileID: 5322890320825385474, guid: 84602fc8ccf6de04898e4e4e57389268,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2ffb2426f8884e34d860c934f6360b7f, type: 2}
+    - target: {fileID: 5322890320825385474, guid: 84602fc8ccf6de04898e4e4e57389268,
+        type: 3}
+      propertyPath: m_Materials.Array.data[2]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2ffb2426f8884e34d860c934f6360b7f, type: 2}
+    - target: {fileID: 5322890320825385474, guid: 84602fc8ccf6de04898e4e4e57389268,
+        type: 3}
+      propertyPath: m_Materials.Array.data[3]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2ffb2426f8884e34d860c934f6360b7f, type: 2}
+    - target: {fileID: 5322890320825385474, guid: 84602fc8ccf6de04898e4e4e57389268,
+        type: 3}
+      propertyPath: m_Materials.Array.data[4]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2ffb2426f8884e34d860c934f6360b7f, type: 2}
+    - target: {fileID: 5322890320825385474, guid: 84602fc8ccf6de04898e4e4e57389268,
+        type: 3}
+      propertyPath: m_Parameters.widthMultiplier
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5322890320825385474, guid: 84602fc8ccf6de04898e4e4e57389268,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2ffb2426f8884e34d860c934f6360b7f, type: 2}
     - target: {fileID: 5322890320825385476, guid: 84602fc8ccf6de04898e4e4e57389268,
         type: 3}
       propertyPath: m_Enabled
@@ -4854,6 +4889,7 @@ MonoBehaviour:
   tasksChart: {fileID: 894249765}
   ARObject: {fileID: 558507895}
   Head: {fileID: 21806045}
+  randomData: 1
   ms: {fileID: 1509486006}
   Attention: 1.2
   ks: {fileID: 1614188344}
@@ -7310,4 +7346,4 @@ MonoBehaviour:
   Y_values: []
   windowSize: 50
   maxf_obtained: 0
-  tfFreq: {fileID: 1450193774}
+  tfFreq: {fileID: 663817792}

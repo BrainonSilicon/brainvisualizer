@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using UnityEngine;
 
 public class WindowData
 {
@@ -10,11 +11,15 @@ public class WindowData
     [DllImport("user32.dll")]
     public static extern IntPtr GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
 #else
- //   [DllImport(@"/System/Library/Frameworks/QuartzCore.framework/QuartzCore")]
- //   static extern IntPtr CGWindowListCopyWindowInfo(MonoMac.CoreGraphics.CGWindowListOption option, uint relativeToWindow);
+    //   [DllImport(@"/System/Library/Frameworks/QuartzCore.framework/QuartzCore")]
+    //   static extern IntPtr CGWindowListCopyWindowInfo(MonoMac.CoreGraphics.CGWindowListOption option, uint relativeToWindow);
 #endif
+    static private string[] apps = new string[] { "Unity", "devenv", "mspaint", "wordpad", "chrome" };
+    static private int index = 0;
+  
 
-  public static String GetActiveFileNameTitle()
+
+    public static String GetActiveFileNameTitle()
     {
 #if UNITY_STANDALONE_WIN
         IntPtr hWnd = GetForegroundWindow();
@@ -36,11 +41,11 @@ public class WindowData
 
         ////   string result = null;
         //IntPtr windowInfo = CGWindowListCopyWindowInfo(MonoMac.CoreGraphics.CGWindowListOption.OnScreenOnly, 0);
-        
+
         //MonoMac.Foundation.NSArray values = (MonoMac.Foundation.NSArray)MonoMac.ObjCRuntime.Runtime.GetNSObject(windowInfo);
 
-        
-       
+
+
 
         //for (ulong i = 0, len = values.Count; i < len; i++)
         //{
@@ -50,14 +55,19 @@ public class WindowData
         //    MonoMac.Foundation.NSNumber value = (MonoMac.Foundation.NSNumber)window.ValueForKey(key);
         //    // and so on
         //}
-        
-        
-     //   var foreground_app = MonoMac.AppKit.NSWorkspace.SharedWorkspace.FrontmostApplication;
-     //   return foreground_app.LocalizedName;
-   //    Console.WriteLine($"Pid: {foreground_app.ProcessIdentifier}");
+
+
+        //   var foreground_app = MonoMac.AppKit.NSWorkspace.SharedWorkspace.FrontmostApplication;
+        //   return foreground_app.LocalizedName;
+        //    Console.WriteLine($"Pid: {foreground_app.ProcessIdentifier}");
         //var currentProcess = System.Diagnostics.Process.GetCurrentProcess();
         //return currentProcess.ProcessName;
-            return "Not implemented";
+        System.Random random = new System.Random();
+        if (random.Next(1,100) < 5)
+        {
+            index = (index + 1) % apps.Length;
+        }
+        return apps[index];
 #endif
     }
 }

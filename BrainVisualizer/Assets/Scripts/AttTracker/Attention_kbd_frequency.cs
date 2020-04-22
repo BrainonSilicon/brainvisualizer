@@ -114,7 +114,6 @@ public class Attention_kbd_frequency : MonoBehaviour
 
             // Y_values.Add(signal);
             // Y_values.Add(dx);
-            Debug.Log("Adding value");
             Y_values.Add(ks.NumOfKeyPress());
 
             if (Y_values.Count >= windowSize)
@@ -181,19 +180,10 @@ public class Attention_kbd_frequency : MonoBehaviour
 
     }
 
-
-
     void FixedUpdate()
     {
         //draw both charts: time-domain and frequency-domain
    //     Drawing.drawChart(tfTime,X_inputValues, Y_inputValues, "time");
         Drawing.drawChart(tfFreq, X_inputValues, Y_output, "frequency");
     }
-
-
-        
-   
-
-
-
 }

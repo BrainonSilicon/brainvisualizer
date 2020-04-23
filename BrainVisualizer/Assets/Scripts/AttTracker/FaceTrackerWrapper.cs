@@ -111,6 +111,12 @@ namespace FaceTrackerExample
         public float
             tvecNoiseFilterRange = 90;
 
+        public GameObject myLeftEye;
+        public GameObject myRightEye;
+        public Color EyeLaserColor = Color.green;
+        public float EyeLaserLength = 0.5f;
+        public float EyeLaserWidth = 0.5f;
+
         /// <summary>
         /// The gray mat.
         /// </summary>
@@ -302,6 +308,8 @@ namespace FaceTrackerExample
 
             cascade = new CascadeClassifier();
             cascade.load(haarcascade_frontalface_alt_xml_filepath);
+
+            ARGameObject.transform.LookAt(Camera.main.transform);
             //if (cascade.empty())
             //{
             //  Debug.LogError("cascade file is not loaded.Please copy from “FaceTrackerExample/StreamingAssets/” to “Assets/StreamingAssets/” folder. ");
@@ -328,7 +336,7 @@ namespace FaceTrackerExample
 
             gameObject.GetComponent<Renderer>().material.mainTexture = texture;
 
-            gameObject.transform.localScale = new Vector3(webCamTextureMat.cols(), webCamTextureMat.rows(), 1);
+            //         gameObject.transform.localScale = new Vector3(webCamTextureMat.cols(), webCamTextureMat.rows(), 1);
             Debug.Log("Screen.width " + Screen.width + " Screen.height " + Screen.height + " Screen.orientation " + Screen.orientation);
 
 
@@ -535,7 +543,7 @@ namespace FaceTrackerExample
 
                                 rightEye.SetActive(false);
                                 leftEye.SetActive(false);
-                             //   head.SetActive(false);
+                                //   head.SetActive(false);
                                 mouth.SetActive(false);
                                 axes.SetActive(false);
                             }
@@ -549,7 +557,7 @@ namespace FaceTrackerExample
                 {
                     if (isShowingFacePoints) faceTracker.draw(rgbaMat, new Scalar(255, 0, 0, 255), new Scalar(0, 255, 0, 255));
 
-                    Imgproc.putText(rgbaMat, "'Tap' or 'Space Key' to Reset", new Point(5, rgbaMat.rows() - 5), Imgproc.FONT_HERSHEY_SIMPLEX, 0.8, new Scalar(255, 255, 255, 255), 2, Imgproc.LINE_AA, false);
+                    //    Imgproc.putText(rgbaMat, "'Tap' or 'Space Key' to Reset", new Point(5, rgbaMat.rows() - 5), Imgproc.FONT_HERSHEY_SIMPLEX, 0.8, new Scalar(255, 255, 255, 255), 2, Imgproc.LINE_AA, false);
 
 
                     Point[] points = faceTracker.getPoints()[0];
@@ -574,8 +582,15 @@ namespace FaceTrackerExample
                           points[14]//r ear
                         );
 
-
                         Calib3d.solvePnP(objectPoints, imagePoints, camMatrix, distCoeffs, rvec, tvec);
+
+                        // Tal
+                        Imgproc.circle(rgbaMat, points[31], 4, new Scalar(0, 0, 255, 255), 3, Imgproc.LINE_AA, 0);
+                        Imgproc.circle(rgbaMat, points[36], 4, new Scalar(0, 0, 255, 255), 3, Imgproc.LINE_AA, 0);
+                        LineRenderer lr = myLeftEye.GetComponent<LineRenderer>();
+                        DrawEyeLine(points[31], lr);
+                        LineRenderer rr = myRightEye.GetComponent<LineRenderer>();
+                        DrawEyeLine(points[36], rr);
 
                         bool isRefresh = false;
 
@@ -641,7 +656,7 @@ namespace FaceTrackerExample
                                 || Mathf.Abs((float)(points[51].y - points[57].y)) > Mathf.Abs((float)(points[31].x - points[36].x)) / 2.7)
                             {
 
-                                if (isShowingEffects) mouth.SetActive(true);
+                                //   if (isShowingEffects) mouth.SetActive(true);
 
                             }
                             else
@@ -715,6 +730,8 @@ namespace FaceTrackerExample
                 axes.SetActive(false);
             }
         }
+
+
 
         /// <summary>
         /// Raises the disable event.
@@ -852,6 +869,35 @@ namespace FaceTrackerExample
             {
                 isAutoResetMode = false;
             }
+        }
+
+        private void DrawEyeLine(Point point, LineRenderer lr)
+        {
+
+            lr.material.color = EyeLaserColor;
+            lr.startWidth = EyeLaserWidth;
+            lr.endWidth = EyeLaserWidth;
+
+
+            Vector3[] startEndLine = new Vector3[2];
+            var start = transform.position;
+            var camCorrection = start - Camera.main.transform.position;
+
+            start.x = transform.position.x - transform.lossyScale.x / 2 + (float)point.x / webCamTextureToMatHelper.GetWidth() * transform.lossyScale.x;
+            start.y = transform.position.y - transform.lossyScale.y / 2 + (1 - (float)point.y / webCamTextureToMatHelper.GetHeight()) * transform.lossyScale.y;
+             //  var camCorrection = start - Camera.main.transform.position;
+
+               var end = start - (camCorrection + ARGameObject.transform.forward) * EyeLaserLength;
+          //  var end = start - (camCorrection.normalized + ARGameObject.transform.forward.normalized) * EyeLaserLength;
+            startEndLine[0].x = start.x;
+            startEndLine[0].y = start.y;
+            startEndLine[0].z = start.z;
+            startEndLine[1].x = end.x;
+            startEndLine[1].y = end.y;
+            startEndLine[1].z = end.z;
+
+            lr.positionCount = startEndLine.Length;
+            lr.SetPositions(startEndLine);
         }
     }
 }

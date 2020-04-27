@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TaskChartDrawer : MonoBehaviour
+public class ChartDrawer : MonoBehaviour
 {
     public Color lineColor;
     public float lineWidth = 0.3f;
@@ -27,15 +27,15 @@ public class TaskChartDrawer : MonoBehaviour
 
     public void DrawLine()
     {
-  //      Debug.Log("Drawing " + LineDataPoints.Count);
+        if (LineDataPoints.Count < 2)
+            return;
+
 
         var startWinX = transform.position.x - transform.lossyScale.x / 2;
         var startWinY = transform.position.y - transform.lossyScale.y / 2;
         var endWinX = transform.position.x + transform.lossyScale.x / 2;
         var endWinY = transform.position.y + transform.lossyScale.y / 2;
 
-        if (LineDataPoints.Count < 2)
-            return;
 
         LineRenderer lr = GetComponent<LineRenderer>();
 

@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
-using System.Windows;
+
 
 
 public class DataTracker : MonoBehaviour
@@ -20,7 +17,10 @@ public class DataTracker : MonoBehaviour
     public int threadSleepTimeInMS;
     public int clearKeypressTime;
     public double MousePathRatioThreshold;
-    public TaskChartDrawer tasksChart;
+    public ChartDrawer tasksChart;
+    public ChartDrawer smallMouseAttentionIndicator;
+    public ChartDrawer smallTaskAttentionIndicator;
+    public ChartDrawer smallKbdAttentionIndicator;
     public GameObject ARObject;
     public GameObject Head;
     private int threadCounter;
@@ -28,9 +28,13 @@ public class DataTracker : MonoBehaviour
     private bool threadShouldRun;
     private bool appSwitch = false;
     public bool randomData = true;
+    private float tasksAttention = 0.0f;
+    private float mouseAttention = 0.0f;
+    private float kbdAttention = 0.0f;
+    private System.DateTime lastKbdCheckTime;
 
 
-  //  private ChromeCatchData chromeCatcher;
+    //  private ChromeCatchData chromeCatcher;
 
     public MouseSensor ms;
     private double area;
@@ -56,7 +60,7 @@ public class DataTracker : MonoBehaviour
     private void Start()
     {
         //   ms = new MouseSensor();
-       // ks = new KbdSensor();
+        // ks = new KbdSensor();
 
         area = 0;
         Application.targetFrameRate = 10;
@@ -69,6 +73,8 @@ public class DataTracker : MonoBehaviour
         textAllAppTime.text = DateTime.Now.ToString("h:mm  ");
         activeWindow = WindowData.GetActiveFileNameTitle();
         textAllAppTime.text += activeWindow;
+
+        lastKbdCheckTime = DateTime.Now;
 
         //Debug.Log("About to start Monitoring Chrome");
         //chromeCatcher = new ChromeCatchData();
@@ -107,8 +113,8 @@ public class DataTracker : MonoBehaviour
         AttentionUpdate(mouseStop);
 
         if (mouseStop) ms.ClearDataPoints();
-        ks.ClearKeyPresses(clearKeypressTime);
-        ks.ClearWords(clearKeypressTime);
+        ks.ClearKeyPresses(clearKeypressTime * 2);   // we want to keep twice as many data points so we can calculate the second derivative
+        ks.ClearWords(clearKeypressTime * 2);   // we want to keep twice as many data points so we can calculate the second derivative
     }
 
     private void DisplayDataOnScreen()
@@ -145,10 +151,11 @@ public class DataTracker : MonoBehaviour
     public void DisplayKBDText()
     {
         keyboardText.text = "";
-        keyboardText.text += "Key - " + ((float)ks.NumOfKeyPress()* clearKeypressTime/60).ToString("N2") + "Hz";
-        keyboardText.text += ", Word - " + ((float)ks.NumOfWords()*clearKeypressTime/60).ToString("N2")+ "Hz";
-        keyboardText.text += "\n#Key - " + ks.NumOfKeyPress();
-        keyboardText.text += ", #Word - " + ks.NumOfWords();
+        var keyPress = ks.NumOfKeyPress(clearKeypressTime);
+        keyboardText.text += "Key - " + ((float)keyPress / clearKeypressTime ).ToString("N2") + "Hz";
+        keyboardText.text += ", Word - " + ((float)ks.NumOfWords(clearKeypressTime) / clearKeypressTime ).ToString("N2") + "Hz";
+        keyboardText.text += "\n#Key - " + keyPress;
+        keyboardText.text += ", #Word - " + ks.NumOfWords(clearKeypressTime);
     }
 
     private void DisplayHeadText()
@@ -177,7 +184,7 @@ public class DataTracker : MonoBehaviour
     public void OnDestroy()
     {
         ks.Dispose();
-    //    chromeCatcher.StopMonitoring();
+        //    chromeCatcher.StopMonitoring();
         //   threadShouldRun = false;
     }
 
@@ -185,22 +192,55 @@ public class DataTracker : MonoBehaviour
     {
         if (mouseStop) MousePathAttentionUpdate();
         AppSwitchAttentionUpdate();
+        KbdAttentionUpdate();
+    }
+
+    public void KbdAttentionUpdate()
+    {
+        if ((DateTime.Now - lastKbdCheckTime).TotalSeconds > 3)
+        {
+            lastKbdCheckTime = DateTime.Now;
+            var dt = clearKeypressTime;
+            var keyCountt0 = ks.NumOfKeyPress(clearKeypressTime);
+            var keyCountt1 = ks.NumOfKeyPress(clearKeypressTime * 2) - keyCountt0;
+
+            var dkeyCount0dt = keyCountt0 / dt;
+            var dkeyCount1dt = keyCountt1 / dt;
+
+            var keyCountChange = (dkeyCount0dt - dkeyCount1dt);
+
+            if (keyCountChange > 0.3)
+            {
+                kbdAttention += ChangeAttentionPoints(3);
+            }
+            else if (keyCountChange < -0.3)
+            {
+                kbdAttention += ChangeAttentionPoints(-3);
+            }                                  
+            smallKbdAttentionIndicator.AddDataPoint(kbdAttention);
+            smallKbdAttentionIndicator.DrawLine();
+        }
+
     }
 
     private void MousePathAttentionUpdate()
     {
+        float attentionAdded;
         if (path < MousePathRatioThreshold)
         {
-            ChangeAttentionPoints(3);
+            attentionAdded = ChangeAttentionPoints(3);
             ms.DrawPath(true); //, MousePathStartWin, MousePathEndWin);
         }
         else
         {
-            ChangeAttentionPoints(-3);
+            attentionAdded = ChangeAttentionPoints(-3);
             ms.DrawPath(false); //, MousePathStartWin, MousePathEndWin);
         }
 
         ms.DrawStartEnd(); //, MousePathStartWin, MousePathEndWin);
+        mouseAttention += attentionAdded;
+        smallMouseAttentionIndicator.AddDataPoint(mouseAttention);
+        smallMouseAttentionIndicator.DrawLine();
     }
 
     private void AppSwitchAttentionUpdate()
@@ -223,10 +263,11 @@ public class DataTracker : MonoBehaviour
 
                 textAllAppTime.text += "\n" + DateTime.Now.ToString("h:mm  ");
                 textAllAppTime.text += WindowData.GetActiveFileNameTitle();
-                //var rect = textAllAppTime.rectTransform.rect;
-                //rect.height += 46;
                 tasksChart.AddDataPoint(appsOrganizer.Distance(activeWindow, WindowData.GetActiveFileNameTitle()));
-                ChangeAttentionPoints(-appsOrganizer.Distance(activeWindow, WindowData.GetActiveFileNameTitle()));
+                var attentionAdded = ChangeAttentionPoints(-appsOrganizer.Distance(activeWindow, WindowData.GetActiveFileNameTitle()));
+                tasksAttention += attentionAdded;
+                smallTaskAttentionIndicator.AddDataPoint(tasksAttention);
+                smallTaskAttentionIndicator.DrawLine();
                 activeWindow = WindowData.GetActiveFileNameTitle();
 
             }
@@ -239,20 +280,24 @@ public class DataTracker : MonoBehaviour
         textAppSwitch.enabled = false;
     }
 
-    private void ChangeAttentionPoints(double points)
+    private float ChangeAttentionPoints(double points)
     {
+        double attToAdd;
         if (points > 0)
         {
             var dAttention = 100 - Attention;
-            Attention += points * dAttention / 100;
+            attToAdd = points * dAttention / 100;
         }
         else
         {
-            Attention += points * Attention / 100;
+            attToAdd = points * Attention / 100;
+
         }
+        Attention += attToAdd;
 
         if (Attention > 100) Attention = 100;
         if (Attention < 0) Attention = 0;
+        return (float)attToAdd;
     }
 
     //private void GetChrome()

@@ -25,18 +25,18 @@ public class AppsOrganizer
 
         if (!foundOne || !foundTwo)
         {
-            Debug.Log(one + " " + two + "20");
+         //   Debug.Log(one + " " + two + "20");
             return 20;
         }
 
         if (foundBothInSameSet)
         {
-            Debug.Log(one + " " + two + "1");
+         //   Debug.Log(one + " " + two + "1");
 
             return 3;
         }
 
-        Debug.Log(one + " " + two + "10");
+       // Debug.Log(one + " " + two + "10");
 
         return 10;
     }

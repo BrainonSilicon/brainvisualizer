@@ -587,10 +587,9 @@ namespace FaceTrackerExample
                         // Tal
                         Imgproc.circle(rgbaMat, points[31], 4, new Scalar(0, 0, 255, 255), 3, Imgproc.LINE_AA, 0);
                         Imgproc.circle(rgbaMat, points[36], 4, new Scalar(0, 0, 255, 255), 3, Imgproc.LINE_AA, 0);
-                        LineRenderer lr = myLeftEye.GetComponent<LineRenderer>();
-                        DrawEyeLine(points[31], lr);
-                        LineRenderer rr = myRightEye.GetComponent<LineRenderer>();
-                        DrawEyeLine(points[36], rr);
+                        
+                        DrawEyeLine(points[31], myLeftEye);
+                        DrawEyeLine(points[36], myRightEye);
 
                         bool isRefresh = false;
 
@@ -709,7 +708,7 @@ namespace FaceTrackerExample
                 Utils.fastMatToTexture2D(rgbaMat, texture);
             }
 
-            if (Input.GetKeyUp(KeyCode.Space) || Input.touchCount > 0)
+            if (Input.GetKeyUp(KeyCode.Space)) //|| Input.touchCount > 0)
             {
                 faceTracker.reset();
                 if (oldRvec != null)
@@ -728,6 +727,11 @@ namespace FaceTrackerExample
                 head.SetActive(false);
                 mouth.SetActive(false);
                 axes.SetActive(false);
+            }
+            if (Input.GetKeyUp(KeyCode.A))
+            {
+                myLeftEye.SetActive(!myLeftEye.activeSelf);
+                myRightEye.SetActive(!myRightEye.activeSelf);
             }
         }
 
@@ -871,12 +875,26 @@ namespace FaceTrackerExample
             }
         }
 
-        private void DrawEyeLine(Point point, LineRenderer lr)
+        private void DrawEyeLine(Point point, GameObject eye)
         {
+            LineRenderer lr = eye.GetComponent<LineRenderer>();
 
             lr.material.color = EyeLaserColor;
             lr.startWidth = EyeLaserWidth;
             lr.endWidth = EyeLaserWidth;
+
+            //eye.transform.LookAt(Camera.main.transform);
+            ////find the vector pointing from our position to the target
+            //_direction = (transform.position - target.transform.position).normalized;
+
+            ////create the rotation we need to be in to look at the target
+            //_lookRotation = Quaternion.LookRotation(_direction);
+
+            ////rotate us over time according to speed until we are in the required rotation
+            //transform.rotation = Quaternion.Slerp(transform.rotation, _lookRotation, Time.deltaTime * rotationSpeed);
+
+
+            //eye.transform.rotation += ARGameObject.transform.rotation;
 
 
             Vector3[] startEndLine = new Vector3[2];

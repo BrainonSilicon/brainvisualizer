@@ -66,6 +66,11 @@ public class KbdSensor : MonoBehaviour, IAttentionSensor, IDisposable
 
     public int NumOfKeyPress(int t)
     {
+        if (isRandom)
+        {
+            return UnityEngine.Random.Range(1, 30);
+        }
+
         int res = 0;
         var currentTime = System.DateTime.Now;
         foreach (KeyData key in KeyDataPoints)

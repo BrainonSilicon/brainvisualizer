@@ -152,8 +152,8 @@ public class DataTracker : MonoBehaviour
     {
         keyboardText.text = "";
         var keyPress = ks.NumOfKeyPress(clearKeypressTime);
-        keyboardText.text += "Key - " + ((float)keyPress / clearKeypressTime ).ToString("N2") + "Hz";
-        keyboardText.text += ", Word - " + ((float)ks.NumOfWords(clearKeypressTime) / clearKeypressTime ).ToString("N2") + "Hz";
+        keyboardText.text += "Key - " + ((float)keyPress / clearKeypressTime).ToString("N2") + "Hz";
+        keyboardText.text += ", Word - " + ((float)ks.NumOfWords(clearKeypressTime) / clearKeypressTime).ToString("N2") + "Hz";
         keyboardText.text += "\n#Key - " + keyPress;
         keyboardText.text += ", #Word - " + ks.NumOfWords(clearKeypressTime);
     }
@@ -209,14 +209,10 @@ public class DataTracker : MonoBehaviour
 
             var keyCountChange = (dkeyCount0dt - dkeyCount1dt);
 
-            if (keyCountChange > 0.3)
-            {
-                kbdAttention += ChangeAttentionPoints(3);
-            }
-            else if (keyCountChange < -0.3)
-            {
-                kbdAttention += ChangeAttentionPoints(-3);
-            }                                  
+            if (keyCountChange > 0.3) kbdAttention += ChangeAttentionPoints(3);
+            else if (keyCountChange > -0.3) kbdAttention += ChangeAttentionPoints(1);
+            else kbdAttention += ChangeAttentionPoints(-3);
+
             smallKbdAttentionIndicator.AddDataPoint(kbdAttention);
             smallKbdAttentionIndicator.DrawLine();
         }

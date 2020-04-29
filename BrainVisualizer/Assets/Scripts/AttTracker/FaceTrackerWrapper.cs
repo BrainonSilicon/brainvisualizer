@@ -728,7 +728,7 @@ namespace FaceTrackerExample
                 mouth.SetActive(false);
                 axes.SetActive(false);
             }
-            if (Input.GetKeyUp(KeyCode.A))
+            if (Input.GetKeyUp(KeyCode.Tab))
             {
                 myLeftEye.SetActive(!myLeftEye.activeSelf);
                 myRightEye.SetActive(!myRightEye.activeSelf);

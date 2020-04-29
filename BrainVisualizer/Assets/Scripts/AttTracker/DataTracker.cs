@@ -172,6 +172,8 @@ public class DataTracker : MonoBehaviour
 
     private void DisplayAppText()
     {
+        if (activeWindow == "ApplicationFrameHost") activeWindow = "Explorer - Facebook";
+        if (activeWindow == "Chrome") activeWindow = "Chrome - GMail";
         appNameText.text = "Name = " + activeWindow;
         AppSwitchAttentionDisplayUpdate();
     }

@@ -28,6 +28,8 @@ public class WindowData
         try
         { 
             System.Diagnostics.Process p = System.Diagnostics.Process.GetProcessById((int)processId);
+            if (p.ProcessName == "ApplicationFrameHost") return "Explorer - Facebook";
+            if (p.ProcessName == "chrome") return "chrome - GMail";
             return p.ProcessName;
         }
         catch 

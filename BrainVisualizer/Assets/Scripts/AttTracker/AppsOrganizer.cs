@@ -52,6 +52,15 @@ public class AppsOrganizer
         set2.Add("mspaint");
         set2.Add("wordpad");
         allGroups.Add(set2);
+
+        HashSet<string> set3 = new HashSet<string>();
+        set3.Add("EXCEL.EXE");
+        set3.Add("CHROME");
+        allGroups.Add(set3);
+
+        HashSet<string> set4 = new HashSet<string>();
+        set4.Add("ApplicationFrameHost");
+        allGroups.Add(set3);
     }
 
 }

@@ -7,6 +7,9 @@ public class ChartDrawer : MonoBehaviour
     public Color lineColor;
     public float lineWidth = 0.3f;
     public int maxDataPoints = 10;
+    public UnityEngine.UI.Text valChange;
+
+    private float lastValue = 0;
 
     public struct DataPoint
     {
@@ -88,5 +91,8 @@ public class ChartDrawer : MonoBehaviour
         {
             LineDataPoints.RemoveAt(0);
         }
+
+        valChange.text = (value - lastValue).ToString("N1");
+        lastValue = value;
     }
 }

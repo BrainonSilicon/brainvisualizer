@@ -19,10 +19,10 @@ public class KbdSensor : MonoBehaviour, IAttentionSensor, IDisposable
 #endif
     public KbdSensor()
     {
-//#if UNITY_STANDALONE_WIN
-//        _globalKeyboardHook = new GlobalKeyboardHook();
-//        _globalKeyboardHook.KeyboardPressed += OnKeyPressed;
-//#endif
+        //#if UNITY_STANDALONE_WIN
+        //        _globalKeyboardHook = new GlobalKeyboardHook();
+        //        _globalKeyboardHook.KeyboardPressed += OnKeyPressed;
+        //#endif
     }
 
     private void Start()
@@ -39,7 +39,7 @@ public class KbdSensor : MonoBehaviour, IAttentionSensor, IDisposable
     {
         if (e.KeyboardState == GlobalKeyboardHook.KeyboardState.KeyDown)
         {
-            Debug.Log("Key down");
+         //   Debug.Log("Key down");
             KeyData data = new KeyData();
             data.t = System.DateTime.Now;
             KeyDataPoints.Add(data);
@@ -117,38 +117,41 @@ public class KbdSensor : MonoBehaviour, IAttentionSensor, IDisposable
     public void ClearKeyPresses(int t)
     {
         var currentTime = System.DateTime.Now;
-        foreach (KeyData key in KeyDataPoints)
-        {
-            try
-            {
-                if ((currentTime - key.t).TotalSeconds > t)
-                {
-                    KeyDataPoints.Remove(key);
-                }
-            } catch
-            {
-                // do nothing
-            }
-        }
+        //        foreach (KeyData key in KeyDataPoints)
+        //for (int i=0; i<KeyDataPoints.Count; i++)
+        //{
+        //    try
+        //    {
+        //        if ((currentTime - KeyDataPoints[i].t).TotalSeconds > t)
+        //        {
+        //            KeyDataPoints.RemoveAt(i);
+        //        }
+        //    } catch
+        //    {
+        //        // do nothing
+        //    }
+        //}
+        KeyDataPoints.RemoveAll(key => (currentTime - key.t).TotalSeconds > t);
     }
 
     public void ClearWords(int t)
     {
         var currentTime = System.DateTime.Now;
-        foreach (KeyData word in WordsDataPoints)
-        {
-            try
-            {
-                if ((currentTime - word.t).TotalSeconds > t)
-                {
-                    WordsDataPoints.Remove(word);
-                }
-            }
-            catch
-            {
-                // do nothing
-            }
-        }
+        WordsDataPoints.RemoveAll(word => (currentTime - word.t).TotalSeconds > t);
+        //foreach (KeyData word in WordsDataPoints)
+        //{
+        //    try
+        //    {
+        //        if ((currentTime - word.t).TotalSeconds > t)
+        //        {
+        //            WordsDataPoints.Remove(word);
+        //        }
+        //    }
+        //    catch
+        //    {
+        //        // do nothing
+        //    }
+        //}
     }
 
     public double Attention()

@@ -91,8 +91,10 @@ public class ChartDrawer : MonoBehaviour
         {
             LineDataPoints.RemoveAt(0);
         }
-
-        valChange.text = (value - lastValue).ToString("N1");
-        lastValue = value;
+        if (valChange != null)
+        {
+            valChange.text = (value - lastValue).ToString("N1");
+            lastValue = value;
+        }
     }
 }

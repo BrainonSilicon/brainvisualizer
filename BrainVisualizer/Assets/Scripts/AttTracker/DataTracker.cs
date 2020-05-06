@@ -205,6 +205,7 @@ public class DataTracker : MonoBehaviour
             var dt = clearKeypressTime;
             var keyCountt0 = ks.NumOfKeyPress(clearKeypressTime);
             var keyCountt1 = ks.NumOfKeyPress(clearKeypressTime * 2) - keyCountt0;
+            if (keyCountt0 == 0 && keyCountt1 == 0) return;
 
             var dkeyCount0dt = keyCountt0 / dt;
             var dkeyCount1dt = keyCountt1 / dt;

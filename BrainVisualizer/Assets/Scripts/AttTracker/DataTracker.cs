@@ -244,11 +244,11 @@ public class DataTracker : MonoBehaviour
 
     private void AppSwitchAttentionUpdate()
     {
-        if (appSwitch)
-        {
-            ChangeAttentionPoints(-10);
-            appSwitch = false;
-        }
+        //if (appSwitch)
+        //{
+        //    ChangeAttentionPoints(-10);
+        //    appSwitch = false;
+        //}
     }
 
     private void AppSwitchAttentionDisplayUpdate()

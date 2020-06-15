@@ -391,14 +391,14 @@ namespace FaceTrackerExample
 
             Calib3d.calibrationMatrixValues(camMatrix, imageSize, apertureWidth, apertureHeight, fovx, fovy, focalLength, principalPoint, aspectratio);
 
-            Debug.Log("imageSize " + imageSize.ToString());
-            Debug.Log("apertureWidth " + apertureWidth);
-            Debug.Log("apertureHeight " + apertureHeight);
-            Debug.Log("fovx " + fovx[0]);
-            Debug.Log("fovy " + fovy[0]);
-            Debug.Log("focalLength " + focalLength[0]);
-            Debug.Log("principalPoint " + principalPoint.ToString());
-            Debug.Log("aspectratio " + aspectratio[0]);
+            //Debug.Log("imageSize " + imageSize.ToString());
+            //Debug.Log("apertureWidth " + apertureWidth);
+            //Debug.Log("apertureHeight " + apertureHeight);
+            //Debug.Log("fovx " + fovx[0]);
+            //Debug.Log("fovy " + fovy[0]);
+            //Debug.Log("focalLength " + focalLength[0]);
+            //Debug.Log("principalPoint " + principalPoint.ToString());
+            //Debug.Log("aspectratio " + aspectratio[0]);
 
 
             //To convert the difference of the FOV value of the OpenCV and Unity. 
@@ -587,7 +587,9 @@ namespace FaceTrackerExample
                         // Tal
                         Imgproc.circle(rgbaMat, points[31], 4, new Scalar(0, 0, 255, 255), 3, Imgproc.LINE_AA, 0);
                         Imgproc.circle(rgbaMat, points[36], 4, new Scalar(0, 0, 255, 255), 3, Imgproc.LINE_AA, 0);
-                        
+
+                        CalcEyeColor(points[31], ref grayMat);
+
                         DrawEyeLine(points[31], myLeftEye);
                         DrawEyeLine(points[36], myRightEye);
 
@@ -733,6 +735,21 @@ namespace FaceTrackerExample
                 myLeftEye.SetActive(!myLeftEye.activeSelf);
                 myRightEye.SetActive(!myRightEye.activeSelf);
             }
+        }
+
+        private void CalcEyeColor(Point p, ref Mat grayMay)
+        {
+            // define location of sub matrices in image
+            int px = (int)p.x;
+            int py = (int)p.y;
+            var size = 10;
+            var roi1 = new OpenCVForUnity.CoreModule.Rect(px-size, py-size, size*2, size*2);
+
+            Mat subMat = new OpenCVForUnity.CoreModule.Mat(grayMat, roi1);
+
+            var leftEyeColor = OpenCVForUnity.CoreModule.Core.mean(subMat);
+
+            Debug.Log("Eye Color is " + leftEyeColor.val[0]);
         }
 
 
